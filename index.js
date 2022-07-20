@@ -1,7 +1,13 @@
 import express from "express";
 const app = express();
-import { application } from "./firebaseConfig.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { application, database } from "./firebaseConfig.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
+import { collection, addDoc, getDoc, getDocs } from "firebase/firestore";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
@@ -15,13 +21,29 @@ app.use(express.urlencoded({ extended: true }));
 
 const auth = getAuth();
 
+const collectionRef = collection(database, "DAKs");
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
-app.post("/",(req,res)=>{
-
-})
+app.post("/", (req, res) => {
+  const subject = req.body.dakSubject;
+  const body = req.body.dakBody;
+  addDoc(collectionRef, {
+    DAK_Subject: subject,
+    DAK_Body: body,
+  })
+    .then(() => {
+      res.send("Your document was submitted!");
+    })
+    .catch((err) => {
+      console.log(err.message);
+      res.send(
+        "There was a problem submitting your document. Please try again!"
+      );
+    });
+});
 
 app.get("/login", (req, res) => {
   res.sendFile(__dirname + "/views/login.html");
@@ -49,6 +71,16 @@ app.get("/received-section", (req, res) => {
       res.redirect("/login");
     }
   });
+
+  getDocs(collectionRef)
+  .then((res)=>{
+    console.log(res.docs.map((item)=>{
+      return {...item.data(),id: item.id};
+    }));
+  })
+  .catch((err)=>{
+    console.log(err.message);
+  })
 });
 
 app.get("/section-head", (req, res) => {
