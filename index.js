@@ -23,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 const auth = getAuth();
 
 const collectionRef = collection(database, "DAKs");
+const dakCountRef = collection(database, "DAK counts");
 let DAKs = [];
 
 app.get("/", (req, res) => {
@@ -68,6 +69,7 @@ app.get("/report", (req, res) => {
   return;
 });
 
+let DAKcount;
 app.get("/received-section", (req, res) => {
   const currentUser = auth.currentUser;
   if (currentUser === null) res.redirect("/login");
@@ -82,14 +84,19 @@ app.get("/received-section", (req, res) => {
 
   getDocs(collectionRef)
     .then((res) => {
+      DAKcount = res.docs.length;
       DAKs = res.docs.map((item) => {
-        return {...item.data(), id: item.id};
+        return { ...item.data(), id: item.id };
       });
     })
     .catch((err) => {
       console.log(err.message);
     });
   return;
+});
+
+app.post("/received-section-dakcount", (req, res) => {
+  
 });
 
 app.get("/section-head", (req, res) => {
@@ -107,7 +114,7 @@ app.get("/section-head", (req, res) => {
 });
 
 app.post("/received-section", (req, res) => {
-  res.render("dakView", { dakList: DAKs });
+  res.render("dakView", { dakList: DAKs, count: DAKcount });
 });
 
 app.post("/login", (req, res) => {

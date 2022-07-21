@@ -13,7 +13,7 @@
      <!--Navbar-->
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
     <div class="container">
-      <a href="index.html" class="navbar-brand">Dak Portal</a>
+      <a href="/" class="navbar-brand">Dak Portal</a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -34,21 +34,9 @@
   </header>
     <br>
     <!--Show daks in form of cards-->
-  <!-- <div>
-    <% for(let i = 0;i<dakList.length;i++){ %>
-      <div>
-        <h3><%= dakList[i].DAK_Subject %> </h3>
-        <p><%= dakList[i].DAK_Body %> </p>
-      </div> 
-      <% } %> 
-  </div> -->
-  
-  <!--Updated dak in form of cards 
-  - just try it mostly should work
-  - have a great day ahead :D 
-  - yeh hata lena dekhne ke baad xD-->
-  <div class="container card">
-    <% for(let i = 0;i<dakList.length;i++){ %>
+  <h3>No. of DAKs: <%= count  %> </h3>
+  <% for(let i = 0;i<dakList.length;i++){ %>
+    <div class="mx-3 card mb-3">
       <div class="card-body">
         <h3><%= dakList[i].DAK_Subject %> </h3>
         <p><%= dakList[i].DAK_Body %> </p>
@@ -87,8 +75,8 @@
             </div>
         </form>
       </div> 
+    </div>
       <% } %> 
-  </div>
 
     <!--JS CDN-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
