@@ -85,7 +85,6 @@ app.get("/received-section", (req, res) => {
       DAKs = res.docs.map((item) => {
         return {...item.data(), id: item.id};
       });
-      console.log(DAKs);
     })
     .catch((err) => {
       console.log(err.message);
