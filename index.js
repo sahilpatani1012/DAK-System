@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
+import ejs from "ejs";
 import { collection, addDoc, getDoc, getDocs } from "firebase/firestore";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -15,16 +16,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 app.use("/assets", express.static(__dirname + "/assets"));
-
+app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const auth = getAuth();
 
 const collectionRef = collection(database, "DAKs");
+let DAKs = [];
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/views/index.html");
+  res.render("index");
+  return;
 });
 
 app.post("/", (req, res) => {
@@ -43,56 +46,69 @@ app.post("/", (req, res) => {
         "There was a problem submitting your document. Please try again!"
       );
     });
+  return;
 });
 
 app.get("/login", (req, res) => {
-  res.sendFile(__dirname + "/views/login.html");
+  res.render("login");
+  return;
 });
 
 app.get("/report", (req, res) => {
   const currentUser = auth.currentUser;
+  if (currentUser === null) res.redirect("/login");
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
     if (user && email === "collector.jaipur@gmail.com") {
-      res.sendFile(__dirname + "/views/collectorAdmin.html");
+      res.render("collectorAdmin");
     } else {
       res.redirect("/login");
     }
   });
+  return;
 });
 
 app.get("/received-section", (req, res) => {
   const currentUser = auth.currentUser;
+  if (currentUser === null) res.redirect("/login");
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
     if (user && email.includes("employee")) {
-      res.sendFile(__dirname + "/views/receivedSection.html");
+      res.render("receivedSection");
     } else {
       res.redirect("/login");
     }
   });
 
   getDocs(collectionRef)
-  .then((res)=>{
-    console.log(res.docs.map((item)=>{
-      return {...item.data(),id: item.id};
-    }));
-  })
-  .catch((err)=>{
-    console.log(err.message);
-  })
+    .then((res) => {
+      DAKs = res.docs.map((item) => {
+        return {...item.data(), id: item.id};
+      });
+      console.log(DAKs);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+  return;
 });
 
 app.get("/section-head", (req, res) => {
   const currentUser = auth.currentUser;
+  if (currentUser === null) res.redirect("/login");
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
     if (user && email.includes("sectionhead@gmail.com")) {
-      res.sendFile(__dirname + "/views/sectionHead.html");
+      res.render("sectionHead");
     } else {
       res.redirect("/login");
     }
   });
+  return;
+});
+
+app.post("/received-section", (req, res) => {
+  res.render("dakView", { dakList: DAKs });
 });
 
 app.post("/login", (req, res) => {
@@ -109,12 +125,26 @@ app.post("/login", (req, res) => {
         default:
           res.redirect("/received-section");
       }
+      return;
     })
     .catch((error) => {
       res.send("Please check your login credentials!");
       const errorCode = error.code;
       const errorMessage = error.message;
+      return;
     });
+  return;
+});
+
+app.get("/logout", (req, res) => {
+  signOut(auth)
+    .then(() => {
+      res.send("You have been successfully signed out!");
+    })
+    .catch((error) => {
+      res.send(error.message);
+    });
+  return;
 });
 
 app.listen(3000, () => {
