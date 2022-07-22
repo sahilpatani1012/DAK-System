@@ -9,7 +9,7 @@ import {
   signOut,
 } from "firebase/auth";
 import ejs from "ejs";
-import { collection, addDoc, getDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
@@ -43,6 +43,7 @@ app.post("/", (req, res) => {
   addDoc(collectionRef, {
     DAK_Subject: subject,
     DAK_Body: body,
+    section: 0
   })
     .then(() => {
       res.send("Your document was submitted!");
@@ -87,7 +88,17 @@ app.get("/received-section", (req, res) => {
       res.redirect("/login");
     }
   });
-
+  // const q = query(collection(database,"DAKs"),where("DAK_Subject","==","A lot of heat in Jaipur"));
+  // const querySnap = getDocs(q);
+  // querySnap
+  // .then((res)=>{
+  //   res.docs.map((doc)=>{
+  //     console.log(doc.id, " => ", doc.data());
+  //   })
+  // })
+  // .catch((err)=>{
+  //   console.log(err.message);
+  // })
   getDocs(collectionRef)
     .then((res) => {
       DAKcount = res.docs.length;
@@ -158,9 +169,23 @@ app.get("/section-head", (req, res) => {
   return;
 });
 
-app.post("/received-section", (req, res) => {
-  res.render("dakView", { dakList: DAKs, count: DAKcount });
+app.get("/received-section-daks", (req, res) => {
+  const currentUser = auth.currentUser;
+  if (currentUser === null) res.redirect("/login");
+  const email = currentUser.email;
+  onAuthStateChanged(auth, (user) => {
+    if (user && email.includes("employee")) {
+      res.render("dakView", { dakList: DAKs, count: DAKcount });
+    } else {
+      res.redirect("/login");
+    }
+  });
 });
+
+app.post("/received-section-daks",(req,res)=>{
+  const logs = [{dakID: req.body.dakID,section: req.body.section}]
+  console.log(logs);
+})
 
 app.post("/login", (req, res) => {
   const email = req.body.email;
