@@ -1,3 +1,4 @@
+//Imports --------------------------------------------------------
 import express from "express";
 const app = express();
 import { application, database } from "./firebaseConfig.js";
@@ -12,20 +13,25 @@ import { collection, addDoc, getDoc, getDocs } from "firebase/firestore";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
+//Necessary inclusions ---------------------------------------------------
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+//For ejs rendering, static files and body parsing -----------------------
 app.use("/assets", express.static(__dirname + "/assets"));
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//Firebase auth function ----------------------------------------------
 const auth = getAuth();
 
+//Database collection functions -----------------------------------------
 const collectionRef = collection(database, "DAKs");
 const dakCountRef = collection(database, "DAK counts");
 let DAKs = [];
 
+//Routes --------------------------------------------------------
 app.get("/", (req, res) => {
   res.render("index");
   return;
@@ -96,7 +102,46 @@ app.get("/received-section", (req, res) => {
 });
 
 app.post("/received-section-dakcount", (req, res) => {
-  
+  let date = new Date();
+  const DAKsReceived = [
+    req.body.section1DakCount,
+    req.body.section2DakCount,
+    req.body.section3DakCount,
+    req.body.section4DakCount,
+    req.body.section5DakCount,
+    req.body.section6DakCount,
+    req.body.section7DakCount,
+    req.body.section8DakCount,
+    req.body.section9DakCount,
+    req.body.section10DakCount,
+    req.body.section11DakCount,
+    req.body.section12DakCount,
+    req.body.section13DakCount,
+    req.body.section14DakCount,
+    req.body.section15DakCount,
+    req.body.section16DakCount,
+    req.body.section17DakCount,
+    req.body.section18DakCount,
+    req.body.section19DakCount,
+    req.body.section20DakCount,
+    req.body.section21DakCount,
+    req.body.section22DakCount,
+    req.body.section23DakCount,
+    req.body.section24DakCount,
+  ];
+  addDoc(dakCountRef, {
+    Date: date,
+    DakCount: DAKsReceived,
+  })
+    .then(() => {
+      res.send("DAK counts Submitted!");
+    })
+    .catch((err) => {
+      console.log(err.message);
+      res.send(
+        "There was problem submitting the counts. Please try again!"
+      );
+    });
 });
 
 app.get("/section-head", (req, res) => {
