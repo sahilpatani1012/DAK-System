@@ -9,7 +9,15 @@ import {
   signOut,
 } from "firebase/auth";
 import ejs from "ejs";
-import { collection, addDoc, getDoc, getDocs, query, where } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+} from "firebase/firestore";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
@@ -43,7 +51,7 @@ app.post("/", (req, res) => {
   addDoc(collectionRef, {
     DAK_Subject: subject,
     DAK_Body: body,
-    section: 0
+    section: 0,
   })
     .then(() => {
       res.send("Your document was submitted!");
@@ -149,9 +157,7 @@ app.post("/received-section-dakcount", (req, res) => {
     })
     .catch((err) => {
       console.log(err.message);
-      res.send(
-        "There was problem submitting the counts. Please try again!"
-      );
+      res.send("There was problem submitting the counts. Please try again!");
     });
 });
 
@@ -182,10 +188,23 @@ app.get("/received-section-daks", (req, res) => {
   });
 });
 
-app.post("/received-section-daks",(req,res)=>{
-  const logs = [{dakID: req.body.dakID,section: req.body.section}]
-  console.log(logs);
-})
+app.post("/received-section-daks", (req, res) => {
+  const logs = { dakID: req.body.dakID, section: req.body.section };
+  // console.log(logs[0].dakID.length);
+  // console.log(logs[0].dakID[0]);
+  for (let i = 0; i < logs.dakID.length; i++) {
+    const docToUpdate = doc(database, "DAKs", logs.dakID[i]);
+    updateDoc(docToUpdate, {
+      section: logs.section[i],
+    })
+      .then(() => {
+        res.send("DAKs segregated!");
+      })
+      .catch((err) => {
+        res.send(err.message);
+      });
+  }
+});
 
 app.post("/login", (req, res) => {
   const email = req.body.email;
