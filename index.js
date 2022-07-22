@@ -96,27 +96,28 @@ app.get("/received-section", (req, res) => {
       res.redirect("/login");
     }
   });
-  // const q = query(collection(database,"DAKs"),where("DAK_Subject","==","A lot of heat in Jaipur"));
-  // const querySnap = getDocs(q);
-  // querySnap
-  // .then((res)=>{
-  //   res.docs.map((doc)=>{
-  //     console.log(doc.id, " => ", doc.data());
-  //   })
-  // })
-  // .catch((err)=>{
-  //   console.log(err.message);
-  // })
-  getDocs(collectionRef)
-    .then((res) => {
-      DAKcount = res.docs.length;
+  const q = query(collection(database,"DAKs"),where("section","==",0));
+  const querySnap = getDocs(q);
+  querySnap
+  .then((res)=>{
+    DAKcount = res.docs.length;
       DAKs = res.docs.map((item) => {
         return { ...item.data(), id: item.id };
       });
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+  })
+  .catch((err)=>{
+    console.log(err.message);
+  })
+  // getDocs(collectionRef)
+  //   .then((res) => {
+  //     DAKcount = res.docs.length;
+  //     DAKs = res.docs.map((item) => {
+  //       return { ...item.data(), id: item.id };
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err.message);
+  //   });
   return;
 });
 
@@ -175,6 +176,33 @@ app.get("/section-head", (req, res) => {
   return;
 });
 
+app.get("/election-section-daks", (req, res) => {
+  const currentUser = auth.currentUser;
+  if (currentUser === null) res.redirect("/login");
+  const email = currentUser.email;
+  onAuthStateChanged(auth, (user) => {
+    if (user && email.includes("sectionhead@gmail.com")) {
+      // res.render("sectionHead");
+      const q = query(
+        collection(database, "DAKs"),
+        where("section", "==", "1")
+      );
+      const querySnap = getDocs(q);
+      querySnap
+        .then((res) => {
+          res.docs.map((doc) => {
+            console.log(doc.id, " => ", doc.data());
+          });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    } else {
+      res.redirect("/login");
+    }
+  });
+});
+
 app.get("/received-section-daks", (req, res) => {
   const currentUser = auth.currentUser;
   if (currentUser === null) res.redirect("/login");
@@ -190,8 +218,6 @@ app.get("/received-section-daks", (req, res) => {
 
 app.post("/received-section-daks", (req, res) => {
   const logs = { dakID: req.body.dakID, section: req.body.section };
-  // console.log(logs[0].dakID.length);
-  // console.log(logs[0].dakID[0]);
   for (let i = 0; i < logs.dakID.length; i++) {
     const docToUpdate = doc(database, "DAKs", logs.dakID[i]);
     updateDoc(docToUpdate, {
