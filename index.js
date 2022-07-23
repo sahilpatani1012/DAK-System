@@ -108,6 +108,51 @@ app.get("/report", (req, res) => {
   return;
 });
 
+app.post("/daily-report", (req, res) => {
+  const section = req.body.section;
+  let date = new Date(req.body.datepicker);
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+  date = day + "/" + month + "/" + year;
+  let q = query(
+    collection(database, "section" + section),
+    where("Date", "==", date)
+  );
+  let querySnap = getDocs(q);
+  let temp = [];
+  querySnap
+    .then((response) => {
+      temp = response.docs.map((item) => {
+        return item.data();
+      });
+      let received;
+      let temp2;
+      q = query(collection(database, "DAK counts"), where("Date", "==", date));
+      querySnap = getDocs(q);
+      querySnap
+        .then((response) => {
+          temp2 = response.docs.map((item) => {
+            return item.data();
+          });
+          received = temp2[0].DakCount[section - 1];
+          console.log(temp);
+          res.render("DailyReport", {
+            date: temp[0].Date,
+            disposed: temp[0].disposed,
+            received: received,
+            section: section,
+          });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+});
+
 let DAKcount;
 app.get("/received-section", (req, res) => {
   const currentUser = auth.currentUser;
@@ -218,7 +263,7 @@ app.get("/section-head", (req, res) => {
                     pendency: countArr[0],
                     date: date,
                     section: "section1",
-                    disposed: temp[0].disposed
+                    disposed: temp[0].disposed,
                   });
                 })
                 .catch((err) => {
@@ -237,15 +282,15 @@ app.get("/section-head", (req, res) => {
                     return item.data();
                   });
                   let disposedCount;
-                  if(temp.length === 0) disposedCount = 0;
-                  else{
+                  if (temp.length === 0) disposedCount = 0;
+                  else {
                     disposedCount = temp[0].disposed;
                   }
                   res.render("sectionHead", {
                     pendency: countArr[1],
                     date: date,
                     section: "section2",
-                    disposed: disposedCount
+                    disposed: disposedCount,
                   });
                 })
                 .catch((err) => {
@@ -268,7 +313,7 @@ app.get("/section-head", (req, res) => {
                     pendency: countArr[2],
                     date: date,
                     section: "section3",
-                    disposed: temp[0].disposed
+                    disposed: temp[0].disposed,
                   });
                 })
                 .catch((err) => {
@@ -291,7 +336,7 @@ app.get("/section-head", (req, res) => {
                     pendency: countArr[3],
                     date: date,
                     section: "section4",
-                    disposed: temp[0].disposed
+                    disposed: temp[0].disposed,
                   });
                 })
                 .catch((err) => {
@@ -304,19 +349,18 @@ app.get("/section-head", (req, res) => {
                 where("Date", "==", date)
               );
               querySnap = getDocs(q);
-              querySnap
-                .then((response) => {
-                  let temp = response.docs.map((item) => {
-                    return item.data();
-                  });
-                  console.log(temp);
-                  res.render("sectionHead", {
-                    pendency: countArr[4],
-                    date: date,
-                    section: "section5",
-                    disposed: temp[0].disposed
-                  });
-                })
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                console.log(temp);
+                res.render("sectionHead", {
+                  pendency: countArr[4],
+                  date: date,
+                  section: "section5",
+                  disposed: temp[0].disposed,
+                });
+              });
               break;
             case "section6.sectionhead@gmail.com":
               res.render("sectionHead", {
@@ -612,7 +656,7 @@ app.post("/login", (req, res) => {
 app.get("/logout", (req, res) => {
   signOut(auth)
     .then(() => {
-      res.send("You have been successfully signed out!");
+      res.redirect("/login");
     })
     .catch((error) => {
       res.send(error.message);
