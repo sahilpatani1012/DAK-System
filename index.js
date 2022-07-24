@@ -136,7 +136,6 @@ app.post("/daily-report", (req, res) => {
             return item.data();
           });
           received = temp2[0].DakCount[section - 1];
-          console.log(temp);
           res.render("DailyReport", {
             date: temp[0].Date,
             disposed: temp[0].disposed,
@@ -244,6 +243,7 @@ app.get("/section-head", (req, res) => {
           allDAKcount = response.docs.map((item) => {
             return item.data();
           });
+          console.log(allDAKcount);
           let countArr = allDAKcount[0].DakCount;
           let q, querySnap;
           switch (email) {
@@ -258,12 +258,14 @@ app.get("/section-head", (req, res) => {
                   let temp = response.docs.map((item) => {
                     return item.data();
                   });
-                  console.log(temp);
+                  let disposed;
+                  if (temp.length === 0) disposed = 0;
+                  else disposed = temp[0].disposed;
                   res.render("sectionHead", {
                     pendency: countArr[0],
                     date: date,
                     section: "section1",
-                    disposed: temp[0].disposed,
+                    disposed: disposed,
                   });
                 })
                 .catch((err) => {
@@ -308,12 +310,14 @@ app.get("/section-head", (req, res) => {
                   let temp = response.docs.map((item) => {
                     return item.data();
                   });
-                  console.log(temp);
+                  let disposed;
+                  if (temp.length === 0) disposed = 0;
+                  else disposed = temp[0].disposed;
                   res.render("sectionHead", {
                     pendency: countArr[2],
                     date: date,
                     section: "section3",
-                    disposed: temp[0].disposed,
+                    disposed: disposed,
                   });
                 })
                 .catch((err) => {
@@ -331,12 +335,14 @@ app.get("/section-head", (req, res) => {
                   let temp = response.docs.map((item) => {
                     return item.data();
                   });
-                  console.log(temp);
+                  let disposed;
+                  if (temp.length === 0) disposed = 0;
+                  else disposed = temp[0].disposed;
                   res.render("sectionHead", {
                     pendency: countArr[3],
                     date: date,
                     section: "section4",
-                    disposed: temp[0].disposed,
+                    disposed: disposed,
                   });
                 })
                 .catch((err) => {
@@ -353,146 +359,414 @@ app.get("/section-head", (req, res) => {
                 let temp = response.docs.map((item) => {
                   return item.data();
                 });
-                console.log(temp);
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[4],
                   date: date,
                   section: "section5",
-                  disposed: temp[0].disposed,
+                  disposed: disposed,
                 });
               });
               break;
             case "section6.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[5],
-                date: date,
-                section: "section6",
+              q = query(
+                collection(database, "section6"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[5],
+                  date: date,
+                  section: "section6",
+                  disposed: disposed,
+                });
               });
               break;
             case "section7.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[6],
-                date: date,
-                section: "section7",
+              q = query(
+                collection(database, "section7"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[6],
+                  date: date,
+                  section: "section7",
+                  disposed: disposed,
+                });
               });
               break;
             case "section8.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[7],
-                date: date,
-                section: "section8",
+              q = query(
+                collection(database, "section8"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[7],
+                  date: date,
+                  section: "section8",
+                  disposed: disposed,
+                });
               });
               break;
             case "section9.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[8],
-                date: date,
-                section: "section9",
+              q = query(
+                collection(database, "section9"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[8],
+                  date: date,
+                  section: "section9",
+                  disposed: disposed,
+                });
               });
               break;
             case "section10.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[9],
-                date: date,
-                section: "section10",
+              q = query(
+                collection(database, "section10"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[9],
+                  date: date,
+                  section: "section10",
+                  disposed: disposed,
+                });
               });
               break;
             case "section11.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[10],
-                date: date,
-                section: "section11",
+              q = query(
+                collection(database, "section11"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[10],
+                  date: date,
+                  section: "section11",
+                  disposed: disposed,
+                });
               });
               break;
             case "section12.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[11],
-                date: date,
-                section: "section12",
+              q = query(
+                collection(database, "section12"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[11],
+                  date: date,
+                  section: "section12",
+                  disposed: disposed,
+                });
               });
               break;
             case "section13.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[12],
-                date: date,
-                section: "section13",
+              q = query(
+                collection(database, "section13"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[12],
+                  date: date,
+                  section: "section13",
+                  disposed: disposed,
+                });
               });
               break;
             case "section14.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[13],
-                date: date,
-                section: "section14",
+              q = query(
+                collection(database, "section14"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[13],
+                  date: date,
+                  section: "section14",
+                  disposed: disposed,
+                });
               });
               break;
             case "section15.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[14],
-                date: date,
-                section: "section15",
+              q = query(
+                collection(database, "section15"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[14],
+                  date: date,
+                  section: "section15",
+                  disposed: disposed,
+                });
               });
               break;
             case "section16.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[15],
-                date: date,
-                section: "section16",
+              q = query(
+                collection(database, "section16"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[15],
+                  date: date,
+                  section: "section16",
+                  disposed: disposed,
+                });
               });
               break;
             case "section17.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[16],
-                date: date,
-                section: "section17",
+              q = query(
+                collection(database, "section17"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[16],
+                  date: date,
+                  section: "section17",
+                  disposed: disposed,
+                });
               });
               break;
             case "section18.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[17],
-                date: date,
-                section: "section18",
+              q = query(
+                collection(database, "section18"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[17],
+                  date: date,
+                  section: "section18",
+                  disposed: disposed,
+                });
               });
               break;
             case "section19.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[18],
-                date: date,
-                section: "section19",
+              q = query(
+                collection(database, "section19"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[18],
+                  date: date,
+                  section: "section19",
+                  disposed: disposed,
+                });
               });
               break;
             case "section20.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[19],
-                date: date,
-                section: "section20",
+              q = query(
+                collection(database, "section20"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[19],
+                  date: date,
+                  section: "section20",
+                  disposed: disposed,
+                });
               });
               break;
             case "section21.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[20],
-                date: date,
-                section: "section21",
+              q = query(
+                collection(database, "section21"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[20],
+                  date: date,
+                  section: "section21",
+                  disposed: disposed,
+                });
               });
               break;
             case "section22.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[21],
-                date: date,
-                section: "section22",
+              q = query(
+                collection(database, "section22"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[21],
+                  date: date,
+                  section: "section22",
+                  disposed: disposed,
+                });
               });
               break;
             case "section23.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[22],
-                date: date,
-                section: "section23",
+              q = query(
+                collection(database, "section23"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[22],
+                  date: date,
+                  section: "section23",
+                  disposed: disposed,
+                });
               });
               break;
             case "section24.sectionhead@gmail.com":
-              res.render("sectionHead", {
-                pendency: countArr[23],
-                date: date,
-                section: "section24",
+              q = query(
+                collection(database, "section24"),
+                where("Date", "==", date)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                let temp = response.docs.map((item) => {
+                  return item.data();
+                });
+                let disposed;
+                if (temp.length === 0) disposed = 0;
+                else disposed = temp[0].disposed;
+                res.render("sectionHead", {
+                  pendency: countArr[23],
+                  date: date,
+                  section: "section24",
+                  disposed: disposed,
+                });
               });
               break;
 
@@ -593,6 +867,7 @@ app.post("/section-head", (req, res) => {
     default:
       break;
   }
+
   addDoc(sectionCollection, {
     Date: date,
     disposed: parseInt(disposed.disposed),
