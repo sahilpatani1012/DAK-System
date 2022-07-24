@@ -95,12 +95,17 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/report", (req, res) => {
+  let date = new Date();
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+  date = day + "/" + month + "/" + year;
   const currentUser = auth.currentUser;
   if (currentUser === null) res.redirect("/login");
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
     if (user && email === "collector.jaipur@gmail.com") {
-      res.render("collectorAdmin");
+      res.render("collectorAdmin", { date: date });
     } else {
       res.redirect("/login");
     }
