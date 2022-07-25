@@ -30,7 +30,8 @@
           <td><%= section %></td>
           <td><%= received %></td>
           <td><%= disposed %></td>
-          <td><%= (disposed/received)*100 %></td>
+          <% let efficiency = (disposed/received) %> 
+          <td><%= Math.round(efficiency) %></td>
         </tr>
       </tbody>
     </table>
