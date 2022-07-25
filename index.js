@@ -34,6 +34,22 @@ app.use(express.urlencoded({ extended: true }));
 //Firebase auth function ----------------------------------------------
 const auth = getAuth();
 
+//Month Array
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "June",
+  "July",
+  "Aug",
+  "Sept",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 //Database collection functions -----------------------------------------
 const collectionRef = collection(database, "DAKs");
 const dakCountRef = collection(database, "DAK counts");
@@ -62,13 +78,6 @@ const section22 = collection(database, "section22");
 const section23 = collection(database, "section23");
 const section24 = collection(database, "section24");
 let DAKs = [];
-
-//Fetches the today's date and shows it as a string
-var dateObj = new Date();
-var month = dateObj.getMonth() + 1; //months from 1-12
-var day = dateObj.getDate();
-var year = dateObj.getFullYear();
-let date = day + "/" + month + "/" + year;
 
 //Routes --------------------------------------------------------
 app.get("/", (req, res) => {
@@ -122,14 +131,16 @@ app.get("/report", (req, res) => {
 
 app.post("/daily-report", (req, res) => {
   const section = req.body.section;
-  let date = new Date(req.body.datepicker);
-  let day = date.getDate();
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-  date = day + "/" + month + "/" + year;
+  let dateObj = new Date(req.body.datepicker);
+  let day = dateObj.getDate();
+  let month = months[dateObj.getMonth()];
+  let year = dateObj.getFullYear();
+  let date = day + "/" + month + "/" + year;
   let q = query(
     collection(database, "section" + section),
-    where("Date", "==", date)
+    where("Date.date", "==", day),
+    where("Date.month", "==", month),
+    where("Date.year", "==", year)
   );
   let querySnap = getDocs(q);
   let temp = [];
@@ -138,9 +149,15 @@ app.post("/daily-report", (req, res) => {
       temp = response.docs.map((item) => {
         return item.data();
       });
+      console.log(temp);
       let received;
       let temp2;
-      q = query(collection(database, "DAK counts"), where("Date", "==", date));
+      q = query(
+        collection(database, "DAK counts"),
+        where("Date.date", "==", day),
+        where("Date.month", "==", month),
+        where("Date.year", "==", year)
+      );
       querySnap = getDocs(q);
       querySnap
         .then((response) => {
@@ -149,7 +166,7 @@ app.post("/daily-report", (req, res) => {
           });
           received = temp2[0].DakCount[section - 1];
           res.render("DailyReport", {
-            date: temp[0].Date,
+            date: date,
             disposed: temp[0].disposed,
             received: received,
             section: section,
@@ -164,39 +181,81 @@ app.post("/daily-report", (req, res) => {
     });
 });
 
-app.post("/monthly-report",(req,res)=>{
-  let month = req.body.month;
-  
-})
+app.post("/monthly-report", (req, res) => {
+  const month = req.body.month;
+  const year = parseInt(req.body.year);
+  const section = req.body.section;
+  let q = query(
+    collection(database, "DAK counts"),
+    where("Date.month", "==", month),
+    where("Date.year", "==", year)
+  );
+  let querySnap = getDocs(q);
+  let temp = [];
+  querySnap
+    .then((response) => {
+      temp = response.docs.map((item) => {
+        return item.data();
+      });
+      let received = 0;
+      for (let i = 0; i < temp.length; i++) {
+        received += temp[i].DakCount[section - 1];
+      }
+      console.log(received);
+      q = query(
+        collection(database, "section" + section),
+        where("Date.month", "==", month),
+        where("Date.year", "==", year)
+      );
+      querySnap = getDocs(q);
+      let temp2;
+      querySnap
+        .then((response) => {
+          temp2 = response.docs.map((item) => {
+            return item.data();
+          });
+          let disposed = 0;
+          for(let i=0;i<temp2.length;i++){
+            disposed += temp2[i].disposed;
+          }
+          res.render("MonthlyReport", {
+            month: month,
+            year: year,
+            section: section,
+            received: received,
+            disposed: disposed,
+          });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+});
 
 let DAKcount;
 app.get("/received-section", (req, res) => {
+  let dateObj = new Date(2022, 6, 24);
+  let date = dateObj.getDate();
+  let month = months[dateObj.getMonth()];
+  let year = dateObj.getFullYear();
+  let displayDate = date + " " + month + " " + year;
   const currentUser = auth.currentUser;
   if (currentUser === null) res.redirect("/login");
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
     if (user && email.includes("employee")) {
-      res.render("receivedSection",{date: date});
+      res.render("receivedSection", { date: displayDate });
     } else {
       res.redirect("/login");
     }
   });
-  const q = query(collection(database, "DAKs"), where("section", "==", 0));
-  const querySnap = getDocs(q);
-  querySnap
-    .then((res) => {
-      DAKcount = res.docs.length;
-      DAKs = res.docs.map((item) => {
-        return { ...item.data(), id: item.id };
-      });
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
-  return;
 });
 
 app.post("/received-section-dakcount", (req, res) => {
+  let date = new Date();
   const DAKsReceived = [
     parseInt(req.body.section1DakCount),
     parseInt(req.body.section2DakCount),
@@ -224,7 +283,11 @@ app.post("/received-section-dakcount", (req, res) => {
     parseInt(req.body.section24DakCount),
   ];
   addDoc(dakCountRef, {
-    Date: date,
+    Date: {
+      month: months[date.getMonth()],
+      date: date.getDate(),
+      year: date.getFullYear(),
+    },
     DakCount: DAKsReceived,
   })
     .then(() => {
@@ -238,6 +301,10 @@ app.post("/received-section-dakcount", (req, res) => {
 
 let allDAKcount;
 app.get("/section-head", (req, res) => {
+  let dateObj = new Date();
+  let date = dateObj.getDate();
+  let month = months[dateObj.getMonth()];
+  let year = dateObj.getFullYear();
   const currentUser = auth.currentUser;
   if (currentUser === null) res.redirect("/login");
   const email = currentUser.email;
@@ -245,7 +312,9 @@ app.get("/section-head", (req, res) => {
     if (user) {
       const q = query(
         collection(database, "DAK counts"),
-        where("Date", "==", date)
+        where("Date.date", "==", date),
+        where("Date.month", "==", month),
+        where("Date.year", "==", year)
       );
       const querySnap = getDocs(q);
       querySnap
@@ -260,7 +329,9 @@ app.get("/section-head", (req, res) => {
             case "section1.sectionhead@gmail.com":
               q = query(
                 collection(database, "section1"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap
@@ -285,7 +356,9 @@ app.get("/section-head", (req, res) => {
             case "section2.sectionhead@gmail.com":
               q = query(
                 collection(database, "section2"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap
@@ -312,7 +385,9 @@ app.get("/section-head", (req, res) => {
             case "section3.sectionhead@gmail.com":
               q = query(
                 collection(database, "section3"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap
@@ -337,7 +412,9 @@ app.get("/section-head", (req, res) => {
             case "section4.sectionhead@gmail.com":
               q = query(
                 collection(database, "section4"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap
@@ -362,7 +439,9 @@ app.get("/section-head", (req, res) => {
             case "section5.sectionhead@gmail.com":
               q = query(
                 collection(database, "section5"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -383,7 +462,9 @@ app.get("/section-head", (req, res) => {
             case "section6.sectionhead@gmail.com":
               q = query(
                 collection(database, "section6"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -404,7 +485,9 @@ app.get("/section-head", (req, res) => {
             case "section7.sectionhead@gmail.com":
               q = query(
                 collection(database, "section7"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -425,7 +508,9 @@ app.get("/section-head", (req, res) => {
             case "section8.sectionhead@gmail.com":
               q = query(
                 collection(database, "section8"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -446,7 +531,9 @@ app.get("/section-head", (req, res) => {
             case "section9.sectionhead@gmail.com":
               q = query(
                 collection(database, "section9"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -467,7 +554,9 @@ app.get("/section-head", (req, res) => {
             case "section10.sectionhead@gmail.com":
               q = query(
                 collection(database, "section10"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -488,7 +577,9 @@ app.get("/section-head", (req, res) => {
             case "section11.sectionhead@gmail.com":
               q = query(
                 collection(database, "section11"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -509,7 +600,9 @@ app.get("/section-head", (req, res) => {
             case "section12.sectionhead@gmail.com":
               q = query(
                 collection(database, "section12"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -530,7 +623,9 @@ app.get("/section-head", (req, res) => {
             case "section13.sectionhead@gmail.com":
               q = query(
                 collection(database, "section13"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -551,7 +646,9 @@ app.get("/section-head", (req, res) => {
             case "section14.sectionhead@gmail.com":
               q = query(
                 collection(database, "section14"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -572,7 +669,9 @@ app.get("/section-head", (req, res) => {
             case "section15.sectionhead@gmail.com":
               q = query(
                 collection(database, "section15"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -593,7 +692,9 @@ app.get("/section-head", (req, res) => {
             case "section16.sectionhead@gmail.com":
               q = query(
                 collection(database, "section16"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -614,7 +715,9 @@ app.get("/section-head", (req, res) => {
             case "section17.sectionhead@gmail.com":
               q = query(
                 collection(database, "section17"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -635,7 +738,9 @@ app.get("/section-head", (req, res) => {
             case "section18.sectionhead@gmail.com":
               q = query(
                 collection(database, "section18"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -656,7 +761,9 @@ app.get("/section-head", (req, res) => {
             case "section19.sectionhead@gmail.com":
               q = query(
                 collection(database, "section19"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -677,7 +784,9 @@ app.get("/section-head", (req, res) => {
             case "section20.sectionhead@gmail.com":
               q = query(
                 collection(database, "section20"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -698,7 +807,9 @@ app.get("/section-head", (req, res) => {
             case "section21.sectionhead@gmail.com":
               q = query(
                 collection(database, "section21"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -719,7 +830,9 @@ app.get("/section-head", (req, res) => {
             case "section22.sectionhead@gmail.com":
               q = query(
                 collection(database, "section22"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -740,7 +853,9 @@ app.get("/section-head", (req, res) => {
             case "section23.sectionhead@gmail.com":
               q = query(
                 collection(database, "section23"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -761,7 +876,9 @@ app.get("/section-head", (req, res) => {
             case "section24.sectionhead@gmail.com":
               q = query(
                 collection(database, "section24"),
-                where("Date", "==", date)
+                where("Date.date", "==", date),
+                where("Date.month", "==", month),
+                where("Date.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
@@ -877,9 +994,13 @@ app.post("/section-head", (req, res) => {
     default:
       break;
   }
-
+  let date = new Date();
   addDoc(sectionCollection, {
-    Date: date,
+    Date: {
+      month: months[date.getMonth()],
+      date: date.getDate(),
+      year: date.getFullYear(),
+    },
     disposed: parseInt(disposed.disposed),
   })
     .then(() => {
@@ -888,19 +1009,6 @@ app.post("/section-head", (req, res) => {
     .catch((err) => {
       res.send(err.message);
     });
-});
-
-app.get("/received-section-daks", (req, res) => {
-  const currentUser = auth.currentUser;
-  if (currentUser === null) res.redirect("/login");
-  const email = currentUser.email;
-  onAuthStateChanged(auth, (user) => {
-    if (user && email.includes("employee")) {
-      res.render("dakView", { dakList: DAKs, count: DAKcount });
-    } else {
-      res.redirect("/login");
-    }
-  });
 });
 
 app.post("/received-section-daks", (req, res) => {
@@ -950,5 +1058,5 @@ app.get("/logout", (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log("Server is started at port 3000");
+  console.log("Server is running on port 3000");
 });
