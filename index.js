@@ -63,6 +63,13 @@ const section23 = collection(database, "section23");
 const section24 = collection(database, "section24");
 let DAKs = [];
 
+//Fetches the today's date and shows it as a string
+var dateObj = new Date();
+var month = dateObj.getMonth() + 1; //months from 1-12
+var day = dateObj.getDate();
+var year = dateObj.getFullYear();
+let date = day + "/" + month + "/" + year;
+
 //Routes --------------------------------------------------------
 app.get("/", (req, res) => {
   res.render("index");
@@ -157,6 +164,11 @@ app.post("/daily-report", (req, res) => {
     });
 });
 
+app.post("/monthly-report",(req,res)=>{
+  let month = req.body.month;
+  
+})
+
 let DAKcount;
 app.get("/received-section", (req, res) => {
   const currentUser = auth.currentUser;
@@ -164,7 +176,7 @@ app.get("/received-section", (req, res) => {
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
     if (user && email.includes("employee")) {
-      res.render("receivedSection");
+      res.render("receivedSection",{date: date});
     } else {
       res.redirect("/login");
     }
@@ -183,13 +195,6 @@ app.get("/received-section", (req, res) => {
     });
   return;
 });
-
-//Fetches the today's date and shows it as a string
-var dateObj = new Date();
-var month = dateObj.getMonth() + 1; //months from 1-12
-var day = dateObj.getDate();
-var year = dateObj.getFullYear();
-let date = day + "/" + month + "/" + year;
 
 app.post("/received-section-dakcount", (req, res) => {
   const DAKsReceived = [
