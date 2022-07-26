@@ -237,7 +237,7 @@ app.post("/monthly-report", (req, res) => {
 
 let DAKcount;
 app.get("/received-section", (req, res) => {
-  let dateObj = new Date(2022, 6, 24);
+  let dateObj = new Date();
   let date = dateObj.getDate();
   let month = months[dateObj.getMonth()];
   let year = dateObj.getFullYear();
