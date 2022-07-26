@@ -305,6 +305,7 @@ app.get("/section-head", (req, res) => {
   let date = dateObj.getDate();
   let month = months[dateObj.getMonth()];
   let year = dateObj.getFullYear();
+  let dateString = date+"/"+month+"/"+year;
   const currentUser = auth.currentUser;
   if (currentUser === null) res.redirect("/login");
   const email = currentUser.email;
@@ -344,7 +345,7 @@ app.get("/section-head", (req, res) => {
                   else disposed = temp[0].disposed;
                   res.render("sectionHead", {
                     pendency: countArr[0],
-                    date: date,
+                    date: dateString,
                     section: "section1",
                     disposed: disposed,
                   });
@@ -373,7 +374,7 @@ app.get("/section-head", (req, res) => {
                   }
                   res.render("sectionHead", {
                     pendency: countArr[1],
-                    date: date,
+                    date: dateString,
                     section: "section2",
                     disposed: disposedCount,
                   });
@@ -400,7 +401,7 @@ app.get("/section-head", (req, res) => {
                   else disposed = temp[0].disposed;
                   res.render("sectionHead", {
                     pendency: countArr[2],
-                    date: date,
+                    date: dateString,
                     section: "section3",
                     disposed: disposed,
                   });
@@ -427,7 +428,7 @@ app.get("/section-head", (req, res) => {
                   else disposed = temp[0].disposed;
                   res.render("sectionHead", {
                     pendency: countArr[3],
-                    date: date,
+                    date: dateString,
                     section: "section4",
                     disposed: disposed,
                   });
@@ -453,7 +454,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[4],
-                  date: date,
+                  date: dateString,
                   section: "section5",
                   disposed: disposed,
                 });
@@ -476,7 +477,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[5],
-                  date: date,
+                  date: dateString,
                   section: "section6",
                   disposed: disposed,
                 });
@@ -499,7 +500,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[6],
-                  date: date,
+                  date: dateString,
                   section: "section7",
                   disposed: disposed,
                 });
@@ -522,7 +523,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[7],
-                  date: date,
+                  date: dateString,
                   section: "section8",
                   disposed: disposed,
                 });
@@ -545,7 +546,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[8],
-                  date: date,
+                  date: dateString,
                   section: "section9",
                   disposed: disposed,
                 });
@@ -568,7 +569,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[9],
-                  date: date,
+                  date: dateString,
                   section: "section10",
                   disposed: disposed,
                 });
@@ -591,7 +592,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[10],
-                  date: date,
+                  date: dateString,
                   section: "section11",
                   disposed: disposed,
                 });
@@ -614,7 +615,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[11],
-                  date: date,
+                  date: dateString,
                   section: "section12",
                   disposed: disposed,
                 });
@@ -637,7 +638,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[12],
-                  date: date,
+                  date: dateString,
                   section: "section13",
                   disposed: disposed,
                 });
@@ -660,7 +661,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[13],
-                  date: date,
+                  date: dateString,
                   section: "section14",
                   disposed: disposed,
                 });
@@ -683,7 +684,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[14],
-                  date: date,
+                  date: dateString,
                   section: "section15",
                   disposed: disposed,
                 });
@@ -706,7 +707,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[15],
-                  date: date,
+                  date: dateString,
                   section: "section16",
                   disposed: disposed,
                 });
@@ -729,7 +730,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[16],
-                  date: date,
+                  date: dateString,
                   section: "section17",
                   disposed: disposed,
                 });
@@ -752,7 +753,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[17],
-                  date: date,
+                  date: dateString,
                   section: "section18",
                   disposed: disposed,
                 });
@@ -775,7 +776,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[18],
-                  date: date,
+                  date: dateString,
                   section: "section19",
                   disposed: disposed,
                 });
@@ -798,7 +799,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[19],
-                  date: date,
+                  date: dateString,
                   section: "section20",
                   disposed: disposed,
                 });
@@ -821,7 +822,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[20],
-                  date: date,
+                  date: dateString,
                   section: "section21",
                   disposed: disposed,
                 });
@@ -844,7 +845,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[21],
-                  date: date,
+                  date: dateString,
                   section: "section22",
                   disposed: disposed,
                 });
@@ -867,7 +868,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[22],
-                  date: date,
+                  date: dateString,
                   section: "section23",
                   disposed: disposed,
                 });
@@ -890,7 +891,7 @@ app.get("/section-head", (req, res) => {
                 else disposed = temp[0].disposed;
                 res.render("sectionHead", {
                   pendency: countArr[23],
-                  date: date,
+                  date: dateString,
                   section: "section24",
                   disposed: disposed,
                 });
