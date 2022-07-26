@@ -326,7 +326,7 @@ app.get("/section-head", (req, res) => {
           let countArr = allDAKcount[0].DakCount;
           let q, querySnap;
           switch (email) {
-            case "section1.sectionhead@gmail.com":
+            case "establishment.sectionhead@gmail.com":
               q = query(
                 collection(database, "section1"),
                 where("Date.date", "==", date),
@@ -353,7 +353,7 @@ app.get("/section-head", (req, res) => {
                   console.log(err.message);
                 });
               break;
-            case "section2.sectionhead@gmail.com":
+            case "justice.sectionhead@gmail.com":
               q = query(
                 collection(database, "section2"),
                 where("Date.date", "==", date),
@@ -382,7 +382,7 @@ app.get("/section-head", (req, res) => {
                   console.log(err.message);
                 });
               break;
-            case "section3.sectionhead@gmail.com":
+            case "revenue.sectionhead@gmail.com":
               q = query(
                 collection(database, "section3"),
                 where("Date.date", "==", date),
@@ -409,7 +409,7 @@ app.get("/section-head", (req, res) => {
                   console.log(err.message);
                 });
               break;
-            case "section4.sectionhead@gmail.com":
+            case "assistance.sectionhead@gmail.com":
               q = query(
                 collection(database, "section4"),
                 where("Date.date", "==", date),
@@ -436,7 +436,7 @@ app.get("/section-head", (req, res) => {
                   console.log(err.message);
                 });
               break;
-            case "section5.sectionhead@gmail.com":
+            case "panchayat.sectionhead@gmail.com":
               q = query(
                 collection(database, "section5"),
                 where("Date.date", "==", date),
@@ -459,7 +459,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section6.sectionhead@gmail.com":
+            case "development.sectionhead@gmail.com":
               q = query(
                 collection(database, "section6"),
                 where("Date.date", "==", date),
@@ -482,7 +482,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section7.sectionhead@gmail.com":
+            case "accounts.sectionhead@gmail.com":
               q = query(
                 collection(database, "section7"),
                 where("Date.date", "==", date),
@@ -505,7 +505,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section8.sectionhead@gmail.com":
+            case "landrecords.sectionhead@gmail.com":
               q = query(
                 collection(database, "section8"),
                 where("Date.date", "==", date),
@@ -528,7 +528,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section9.sectionhead@gmail.com":
+            case "singlewindow.sectionhead@gmail.com":
               q = query(
                 collection(database, "section9"),
                 where("Date.date", "==", date),
@@ -551,7 +551,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section10.sectionhead@gmail.com":
+            case "stores.sectionhead@gmail.com":
               q = query(
                 collection(database, "section10"),
                 where("Date.date", "==", date),
@@ -574,7 +574,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section11.sectionhead@gmail.com":
+            case "court.sectionhead@gmail.com":
               q = query(
                 collection(database, "section11"),
                 where("Date.date", "==", date),
@@ -597,7 +597,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section12.sectionhead@gmail.com":
+            case "pdr.sectionhead@gmail.com":
               q = query(
                 collection(database, "section12"),
                 where("Date.date", "==", date),
@@ -620,7 +620,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section13.sectionhead@gmail.com":
+            case "ira.sectionhead@gmail.com":
               q = query(
                 collection(database, "section13"),
                 where("Date.date", "==", date),
@@ -643,7 +643,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section14.sectionhead@gmail.com":
+            case "vigilance.sectionhead@gmail.com":
               q = query(
                 collection(database, "section14"),
                 where("Date.date", "==", date),
@@ -666,7 +666,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section15.sectionhead@gmail.com":
+            case "generaladministration.sectionhead@gmail.com":
               q = query(
                 collection(database, "section15"),
                 where("Date.date", "==", date),
@@ -689,7 +689,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section16.sectionhead@gmail.com":
+            case "law.sectionhead@gmail.com":
               q = query(
                 collection(database, "section16"),
                 where("Date.date", "==", date),
@@ -712,7 +712,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section17.sectionhead@gmail.com":
+            case "records.sectionhead@gmail.com":
               q = query(
                 collection(database, "section17"),
                 where("Date.date", "==", date),
@@ -735,7 +735,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section18.sectionhead@gmail.com":
+            case "estates.sectionhead@gmail.com":
               q = query(
                 collection(database, "section18"),
                 where("Date.date", "==", date),
@@ -758,7 +758,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section19.sectionhead@gmail.com":
+            case "dra.sectionhead@gmail.com":
               q = query(
                 collection(database, "section19"),
                 where("Date.date", "==", date),
@@ -781,7 +781,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section20.sectionhead@gmail.com":
+            case "elections.sectionhead@gmail.com":
               q = query(
                 collection(database, "section20"),
                 where("Date.date", "==", date),
@@ -804,7 +804,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section21.sectionhead@gmail.com":
+            case "letterdispatch.sectionhead@gmail.com":
               q = query(
                 collection(database, "section21"),
                 where("Date.date", "==", date),
@@ -827,7 +827,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section22.sectionhead@gmail.com":
+            case "cbsection.sectionhead@gmail.com":
               q = query(
                 collection(database, "section22"),
                 where("Date.date", "==", date),
@@ -850,7 +850,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section23.sectionhead@gmail.com":
+            case "publicgrievances.sectionhead@gmail.com":
               q = query(
                 collection(database, "section23"),
                 where("Date.date", "==", date),
@@ -873,7 +873,7 @@ app.get("/section-head", (req, res) => {
                 });
               });
               break;
-            case "section24.sectionhead@gmail.com":
+            case "loans.sectionhead@gmail.com":
               q = query(
                 collection(database, "section24"),
                 where("Date.date", "==", date),
