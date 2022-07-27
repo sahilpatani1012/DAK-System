@@ -288,7 +288,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[0].Received,
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id3
+                    sessionID: sectionInfo[0].id3,
                   });
                 }
               });
@@ -435,7 +435,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[3].Received,
                     disposed: sectionInfo[3].disposed,
                     oldPendency: prevSectionInfo[3].pendency,
-                    sessionID: sectionInfo[3].id4
+                    sessionID: sectionInfo[3].id4,
                   });
                 }
               });
@@ -533,7 +533,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[5].Received,
                     disposed: sectionInfo[5].disposed,
                     oldPendency: prevSectionInfo[5].pendency,
-                    sessionID: sectionInfo[5].id6
+                    sessionID: sectionInfo[5].id6,
                   });
                 }
               });
@@ -582,7 +582,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[6].Received,
                     disposed: sectionInfo[6].disposed,
                     oldPendency: prevSectionInfo[6].pendency,
-                    sessionID: sectionInfo[6].id7
+                    sessionID: sectionInfo[6].id7,
                   });
                 }
               });
@@ -631,7 +631,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[7].Received,
                     disposed: sectionInfo[7].disposed,
                     oldPendency: prevSectionInfo[7].pendency,
-                    sessionID: sectionInfo[7].id8
+                    sessionID: sectionInfo[7].id8,
                   });
                 }
               });
@@ -778,7 +778,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[10].Received,
                     disposed: sectionInfo[10].disposed,
                     oldPendency: prevSectionInfo[10].pendency,
-                    sessionID: sectionInfo[10].id11
+                    sessionID: sectionInfo[10].id11,
                   });
                 }
               });
@@ -827,7 +827,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[11].Received,
                     disposed: sectionInfo[11].disposed,
                     oldPendency: prevSectionInfo[11].pendency,
-                    sessionID: sectionInfo[11].id12
+                    sessionID: sectionInfo[11].id12,
                   });
                 }
               });
@@ -876,7 +876,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[12].Received,
                     disposed: sectionInfo[12].disposed,
                     oldPendency: prevSectionInfo[12].pendency,
-                    sessionID: sectionInfo[12].id13
+                    sessionID: sectionInfo[12].id13,
                   });
                 }
               });
@@ -925,7 +925,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[13].Received,
                     disposed: sectionInfo[13].disposed,
                     oldPendency: prevSectionInfo[13].pendency,
-                    sessionID: sectionInfo[13].id14
+                    sessionID: sectionInfo[13].id14,
                   });
                 }
               });
@@ -974,7 +974,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[14].Received,
                     disposed: sectionInfo[14].disposed,
                     oldPendency: prevSectionInfo[14].pendency,
-                    sessionID: sectionInfo[14].id15
+                    sessionID: sectionInfo[14].id15,
                   });
                 }
               });
@@ -1023,7 +1023,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[15].Received,
                     disposed: sectionInfo[15].disposed,
                     oldPendency: prevSectionInfo[15].pendency,
-                    sessionID: sectionInfo[15].id16
+                    sessionID: sectionInfo[15].id16,
                   });
                 }
               });
@@ -1121,7 +1121,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[17].Received,
                     disposed: sectionInfo[17].disposed,
                     oldPendency: prevSectionInfo[17].pendency,
-                    sessionID: sectionInfo[17].id18
+                    sessionID: sectionInfo[17].id18,
                   });
                 }
               });
@@ -1170,7 +1170,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[18].Received,
                     disposed: sectionInfo[18].disposed,
                     oldPendency: prevSectionInfo[18].pendency,
-                    sessionID: sectionInfo[18].id19
+                    sessionID: sectionInfo[18].id19,
                   });
                 }
               });
@@ -1268,7 +1268,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[20].Received,
                     disposed: sectionInfo[20].disposed,
                     oldPendency: prevSectionInfo[20].pendency,
-                    sessionID: sectionInfo[20].id222
+                    sessionID: sectionInfo[20].id222,
                   });
                 }
               });
@@ -1365,7 +1365,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[22].Received,
                     disposed: sectionInfo[22].disposed,
                     oldPendency: prevSectionInfo[22].pendency,
-                    sessionID: sectionInfo[22].id23
+                    sessionID: sectionInfo[22].id23,
                   });
                 }
               });
@@ -1439,21 +1439,21 @@ app.post("/section-head", (req, res) => {
     disposed: parseInt(req.body.disposed),
   };
   let docSnap;
-  let docRef = doc(database,disposed.section,disposed.sessionID);
-  getDoc(docRef)
-  .then((response)=>{
+  let docRef = doc(database, disposed.section, disposed.sessionID);
+  getDoc(docRef).then((response) => {
     docSnap = response.data();
-    if(docSnap.disposed === 0){
-      updateDoc(docRef,{
+    if (docSnap.disposed === 0) {
+      updateDoc(docRef, {
         disposed: disposed.disposed,
-        pendency: docSnap.Received - disposed.disposed
-      })
-      res.send("Disposed count updated! <a href='/section-head'>Go Back</a>")
+        pendency: docSnap.Received - disposed.disposed,
+      });
+      res.send("Disposed count updated! <a href='/section-head'>Go Back</a>");
+    } else {
+      res.send(
+        "Sorry today's disposed is already recorded! Try again tomorrow. <a href='/section-head'>Go Back</a>"
+      );
     }
-    else{
-      res.send("Sorry today's disposed is already recorded! Try again tomorrow. <a href='/section-head'>Go Back</a>")
-    }
-  })
+  });
 });
 
 //COLLECTOR SECTION
@@ -1483,46 +1483,30 @@ app.post("/daily-report", (req, res) => {
   let day = dateObj.getDate();
   let month = months[dateObj.getMonth()];
   let year = dateObj.getFullYear();
-  let date = day + "/" + month + "/" + year;
+  let dateString = day + "/" + month + "/" + year;
   let q = query(
-    collection(database, "section" + section),
-    where("Date.date", "==", day),
-    where("Date.month", "==", month),
-    where("Date.year", "==", year)
+    collection(database, section),
+    where("DateStamp.date", "==", day),
+    where("DateStamp.month", "==", month),
+    where("DateStamp.year", "==", year)
   );
   let querySnap = getDocs(q);
-  let temp = [];
+  let docSnap;
   querySnap
     .then((response) => {
-      temp = response.docs.map((item) => {
+      docSnap = response.docs.map((item) => {
         return item.data();
       });
-      console.log(temp);
-      let received;
-      let temp2;
-      q = query(
-        collection(database, "DAK counts"),
-        where("Date.date", "==", day),
-        where("Date.month", "==", month),
-        where("Date.year", "==", year)
+      let efficiency = Math.round(
+        (docSnap[0].disposed / docSnap[0].Received) * 100
       );
-      querySnap = getDocs(q);
-      querySnap
-        .then((response) => {
-          temp2 = response.docs.map((item) => {
-            return item.data();
-          });
-          received = temp2[0].DakCount[section - 1];
-          res.render("DailyReport", {
-            date: date,
-            disposed: temp[0].disposed,
-            received: received,
-            section: section,
-          });
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
+      res.render("DailyReport", {
+        date: dateString,
+        section: section,
+        received: docSnap[0].Received,
+        disposed: docSnap[0].disposed,
+        efficiency: efficiency,
+      });
     })
     .catch((err) => {
       console.log(err.message);
@@ -1534,49 +1518,32 @@ app.post("/monthly-report", (req, res) => {
   const year = parseInt(req.body.year);
   const section = req.body.section;
   let q = query(
-    collection(database, "DAK counts"),
-    where("Date.month", "==", month),
-    where("Date.year", "==", year)
+    collection(database, section),
+    where("DateStamp.month", "==", month),
+    where("DateStamp.year", "==", year)
   );
   let querySnap = getDocs(q);
-  let temp = [];
+  let docSnap;
   querySnap
     .then((response) => {
-      temp = response.docs.map((item) => {
+      docSnap = response.docs.map((item) => {
         return item.data();
       });
       let received = 0;
-      for (let i = 0; i < temp.length; i++) {
-        received += temp[i].DakCount[section - 1];
+      let disposed = 0;
+      for (let i = 0; i < docSnap.length; i++) {
+        received += docSnap[i].Received;
+        disposed += docSnap[i].disposed;
       }
-      console.log(received);
-      q = query(
-        collection(database, "section" + section),
-        where("Date.month", "==", month),
-        where("Date.year", "==", year)
-      );
-      querySnap = getDocs(q);
-      let temp2;
-      querySnap
-        .then((response) => {
-          temp2 = response.docs.map((item) => {
-            return item.data();
-          });
-          let disposed = 0;
-          for (let i = 0; i < temp2.length; i++) {
-            disposed += temp2[i].disposed;
-          }
-          res.render("MonthlyReport", {
-            month: month,
-            year: year,
-            section: section,
-            received: received,
-            disposed: disposed,
-          });
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
+      let efficiency = Math.round((disposed / received) * 100);
+      res.render("MonthlyReport", {
+        month: month,
+        year: year,
+        section: section,
+        received: received,
+        disposed: disposed,
+        efficiency: efficiency,
+      });
     })
     .catch((err) => {
       console.log(err.message);
