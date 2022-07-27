@@ -1,15 +1,18 @@
 
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"
+import { getFirestore } from "firebase/firestore";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBPaLBF7GC0s91qSuAruXdBNeMCLgx3Rd0",
-  authDomain: "dak-system-ce98e.firebaseapp.com",
-  projectId: "dak-system-ce98e",
-  storageBucket: "dak-system-ce98e.appspot.com",
-  messagingSenderId: "1063930347302",
-  appId: "1:1063930347302:web:d2a9dd263904c743214be7",
-  measurementId: "G-QXHDQEJMLN"
+  apiKey: "AIzaSyBUz00pFfgOHFrATmqJXH6EOKLvVvexI8k",
+  authDomain: "dak-system-892d7.firebaseapp.com",
+  projectId: "dak-system-892d7",
+  storageBucket: "dak-system-892d7.appspot.com",
+  messagingSenderId: "177414777091",
+  appId: "1:177414777091:web:024aaebd57caf321942136"
 };
 
 // Initialize Firebase

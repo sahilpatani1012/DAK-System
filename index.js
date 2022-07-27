@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import ejs from "ejs";
 import {
@@ -33,7 +34,6 @@ app.use(express.urlencoded({ extended: true }));
 
 //Firebase auth function ----------------------------------------------
 const auth = getAuth();
-
 //Month Array
 const months = [
   "Jan",
@@ -50,34 +50,87 @@ const months = [
   "Dec",
 ];
 
+const sections = [
+  "Establishment",
+  "Justice",
+  "Revenue",
+  "Assistance",
+  "Panchayat",
+  "Development",
+  "Accounts",
+  "Land Records",
+  "Single Window",
+  "Stores",
+  "Court",
+  "PDR",
+  "IRA",
+  "Vigilance",
+  "General Administration",
+  "Law",
+  "Records",
+  "Estates",
+  "DRA",
+  "Elections",
+  "Letter Dispatch",
+  "CB Section",
+  "Public Grievances",
+  "Loans",
+];
+
 //Database collection functions -----------------------------------------
-const collectionRef = collection(database, "DAKs");
-const dakCountRef = collection(database, "DAK counts");
-const section1 = collection(database, "section1");
-const section2 = collection(database, "section2");
-const section3 = collection(database, "section3");
-const section4 = collection(database, "section4");
-const section5 = collection(database, "section5");
-const section6 = collection(database, "section6");
-const section7 = collection(database, "section7");
-const section8 = collection(database, "section8");
-const section9 = collection(database, "section9");
-const section10 = collection(database, "section10");
-const section11 = collection(database, "section11");
-const section12 = collection(database, "section12");
-const section13 = collection(database, "section13");
-const section14 = collection(database, "section14");
-const section15 = collection(database, "section15");
-const section16 = collection(database, "section16");
-const section17 = collection(database, "section17");
-const section18 = collection(database, "section18");
-const section19 = collection(database, "section19");
-const section20 = collection(database, "section20");
-const section21 = collection(database, "section21");
-const section22 = collection(database, "section22");
-const section23 = collection(database, "section23");
-const section24 = collection(database, "section24");
-let DAKs = [];
+// const collectionRef = collection(database, "DAKs");
+// const dakCountRef = collection(database, "DAK counts");
+const Establishment = collection(database, "Establishment");
+const Justice = collection(database, "Justice");
+const Revenue = collection(database, "Revenue");
+const Assistance = collection(database, "Assistance");
+const Panchayat = collection(database, "Panchayat");
+const Development = collection(database, "Development");
+const Accounts = collection(database, "Accounts");
+const Land_Records = collection(database, "Land Records");
+const Single_Window = collection(database, "Single Window");
+const Stores = collection(database, "Stores");
+const Court = collection(database, "Court");
+const PDR = collection(database, "PDR");
+const IRA = collection(database, "IRA");
+const Vigilance = collection(database, "Vigilance");
+const General_Administration = collection(database, "General Administration");
+const Law = collection(database, "Law");
+const Records = collection(database, "Records");
+const Estates = collection(database, "Estates");
+const DRA = collection(database, "DRA");
+const Elections = collection(database, "Elections");
+const Letter_Dispatch = collection(database, "Letter Dispatch");
+const CB_Section = collection(database, "CB Section");
+const Public_Grievances = collection(database, "Public Grievances");
+const Loans = collection(database, "Loans");
+
+const sectionDatabases = [
+  Establishment,
+  Justice,
+  Revenue,
+  Assistance,
+  Panchayat,
+  Development,
+  Accounts,
+  Land_Records,
+  Single_Window,
+  Stores,
+  Court,
+  PDR,
+  IRA,
+  Vigilance,
+  General_Administration,
+  Law,
+  Records,
+  Estates,
+  DRA,
+  Elections,
+  Letter_Dispatch,
+  CB_Section,
+  Public_Grievances,
+  Loans,
+];
 
 //Routes --------------------------------------------------------
 app.get("/", (req, res) => {
@@ -85,157 +138,34 @@ app.get("/", (req, res) => {
   return;
 });
 
-app.post("/", (req, res) => {
-  const subject = req.body.dakSubject;
-  const body = req.body.dakBody;
-  addDoc(collectionRef, {
-    DAK_Subject: subject,
-    DAK_Body: body,
-    section: 0,
-  })
-    .then(() => {
-      res.send("Your document was submitted!");
-    })
-    .catch((err) => {
-      console.log(err.message);
-      res.send(
-        "There was a problem submitting your document. Please try again!"
-      );
-    });
-  return;
-});
+//LOGIN SECTION
 
 app.get("/login", (req, res) => {
   res.render("login");
   return;
 });
 
-app.get("/report", (req, res) => {
-  let date = new Date();
-  let day = date.getDate();
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-  date = day + "/" + month + "/" + year;
-  const currentUser = auth.currentUser;
-  if (currentUser === null) res.redirect("/login");
-  const email = currentUser.email;
-  onAuthStateChanged(auth, (user) => {
-    if (user && email === "collector.jaipur@gmail.com") {
-      res.render("collectorAdmin", { date: date });
-    } else {
-      res.redirect("/login");
-    }
-  });
-  return;
-});
-
-app.post("/daily-report", (req, res) => {
-  const section = req.body.section;
-  let dateObj = new Date(req.body.datepicker);
-  let day = dateObj.getDate();
-  let month = months[dateObj.getMonth()];
-  let year = dateObj.getFullYear();
-  let date = day + "/" + month + "/" + year;
-  let q = query(
-    collection(database, "section" + section),
-    where("Date.date", "==", day),
-    where("Date.month", "==", month),
-    where("Date.year", "==", year)
-  );
-  let querySnap = getDocs(q);
-  let temp = [];
-  querySnap
-    .then((response) => {
-      temp = response.docs.map((item) => {
-        return item.data();
-      });
-      console.log(temp);
-      let received;
-      let temp2;
-      q = query(
-        collection(database, "DAK counts"),
-        where("Date.date", "==", day),
-        where("Date.month", "==", month),
-        where("Date.year", "==", year)
-      );
-      querySnap = getDocs(q);
-      querySnap
-        .then((response) => {
-          temp2 = response.docs.map((item) => {
-            return item.data();
-          });
-          received = temp2[0].DakCount[section - 1];
-          res.render("DailyReport", {
-            date: date,
-            disposed: temp[0].disposed,
-            received: received,
-            section: section,
-          });
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
-});
-
-app.post("/monthly-report", (req, res) => {
-  const month = req.body.month;
-  const year = parseInt(req.body.year);
-  const section = req.body.section;
-  let q = query(
-    collection(database, "DAK counts"),
-    where("Date.month", "==", month),
-    where("Date.year", "==", year)
-  );
-  let querySnap = getDocs(q);
-  let temp = [];
-  querySnap
-    .then((response) => {
-      temp = response.docs.map((item) => {
-        return item.data();
-      });
-      let received = 0;
-      for (let i = 0; i < temp.length; i++) {
-        received += temp[i].DakCount[section - 1];
+app.post("/login", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      if (user.email.includes("collector")) {
+        res.redirect("/report");
+      } else if (user.email.includes("sectionhead")) {
+        res.redirect("/section-head");
+      } else {
+        res.redirect("/received-section");
       }
-      console.log(received);
-      q = query(
-        collection(database, "section" + section),
-        where("Date.month", "==", month),
-        where("Date.year", "==", year)
-      );
-      querySnap = getDocs(q);
-      let temp2;
-      querySnap
-        .then((response) => {
-          temp2 = response.docs.map((item) => {
-            return item.data();
-          });
-          let disposed = 0;
-          for(let i=0;i<temp2.length;i++){
-            disposed += temp2[i].disposed;
-          }
-          res.render("MonthlyReport", {
-            month: month,
-            year: year,
-            section: section,
-            received: received,
-            disposed: disposed,
-          });
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
     })
-    .catch((err) => {
-      console.log(err.message);
+    .catch((error) => {
+      res.send("Please check your login credentials!");
     });
 });
 
-let DAKcount;
+//RECEIVED SECTION
+
 app.get("/received-section", (req, res) => {
   let dateObj = new Date();
   let date = dateObj.getDate();
@@ -254,7 +184,7 @@ app.get("/received-section", (req, res) => {
   });
 });
 
-app.post("/received-section-dakcount", (req, res) => {
+app.post("/received-section", (req, res) => {
   let date = new Date();
   const DAKsReceived = [
     parseInt(req.body.section1DakCount),
@@ -282,30 +212,32 @@ app.post("/received-section-dakcount", (req, res) => {
     parseInt(req.body.section23DakCount),
     parseInt(req.body.section24DakCount),
   ];
-  addDoc(dakCountRef, {
-    Date: {
-      month: months[date.getMonth()],
-      date: date.getDate(),
-      year: date.getFullYear(),
-    },
-    DakCount: DAKsReceived,
-  })
-    .then(() => {
-      res.send("DAK counts Submitted!");
+  for (let i = 0; i < sectionDatabases.length; i++) {
+    addDoc(sectionDatabases[i], {
+      DateStamp: {
+        month: months[date.getMonth()],
+        date: date.getDate(),
+        year: date.getFullYear(),
+      },
+      Received: DAKsReceived[i],
     })
-    .catch((err) => {
-      console.log(err.message);
-      res.send("There was problem submitting the counts. Please try again!");
-    });
+      .then(() => {
+        res.send(
+          "DAK counts submitted successfully! <a href='/received-section'>Go Back</a>"
+        );
+      })
+      .catch((err) => {
+        res.send(err.message);
+      });
+  }
 });
 
-let allDAKcount;
 app.get("/section-head", (req, res) => {
   let dateObj = new Date();
   let date = dateObj.getDate();
   let month = months[dateObj.getMonth()];
   let year = dateObj.getFullYear();
-  let dateString = date+"/"+month+"/"+year;
+  let dateString = date + "/" + month + "/" + year;
   const currentUser = auth.currentUser;
   if (currentUser === null) res.redirect("/login");
   const email = currentUser.email;
@@ -1012,40 +944,134 @@ app.post("/section-head", (req, res) => {
     });
 });
 
-app.post("/received-section-daks", (req, res) => {
-  const logs = { dakID: req.body.dakID, section: req.body.section };
-  for (let i = 0; i < logs.dakID.length; i++) {
-    const docToUpdate = doc(database, "DAKs", logs.dakID[i]);
-    updateDoc(docToUpdate, {
-      section: logs.section[i],
-    })
-      .then(() => {
-        res.send("DAKs segregated!");
-      })
-      .catch((err) => {
-        res.send(err.message);
-      });
-  }
+//COLLECTOR SECTION
+
+app.get("/report", (req, res) => {
+  let date = new Date();
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+  date = day + "/" + month + "/" + year;
+  const currentUser = auth.currentUser;
+  if (currentUser === null) res.redirect("/login");
+  const email = currentUser.email;
+  onAuthStateChanged(auth, (user) => {
+    if (user && email === "collector.jaipur@gmail.com") {
+      res.render("collectorAdmin", { date: date });
+    } else {
+      res.redirect("/login");
+    }
+  });
+  return;
 });
 
-app.post("/login", (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      if (user.email.includes("collector")) {
-        res.redirect("/report");
-      } else if (user.email.includes("sectionhead")) {
-        res.redirect("/section-head");
-      } else {
-        res.redirect("/received-section");
-      }
+app.post("/daily-report", (req, res) => {
+  const section = req.body.section;
+  let dateObj = new Date(req.body.datepicker);
+  let day = dateObj.getDate();
+  let month = months[dateObj.getMonth()];
+  let year = dateObj.getFullYear();
+  let date = day + "/" + month + "/" + year;
+  let q = query(
+    collection(database, "section" + section),
+    where("Date.date", "==", day),
+    where("Date.month", "==", month),
+    where("Date.year", "==", year)
+  );
+  let querySnap = getDocs(q);
+  let temp = [];
+  querySnap
+    .then((response) => {
+      temp = response.docs.map((item) => {
+        return item.data();
+      });
+      console.log(temp);
+      let received;
+      let temp2;
+      q = query(
+        collection(database, "DAK counts"),
+        where("Date.date", "==", day),
+        where("Date.month", "==", month),
+        where("Date.year", "==", year)
+      );
+      querySnap = getDocs(q);
+      querySnap
+        .then((response) => {
+          temp2 = response.docs.map((item) => {
+            return item.data();
+          });
+          received = temp2[0].DakCount[section - 1];
+          res.render("DailyReport", {
+            date: date,
+            disposed: temp[0].disposed,
+            received: received,
+            section: section,
+          });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
     })
-    .catch((error) => {
-      res.send("Please check your login credentials!");
+    .catch((err) => {
+      console.log(err.message);
     });
 });
+
+app.post("/monthly-report", (req, res) => {
+  const month = req.body.month;
+  const year = parseInt(req.body.year);
+  const section = req.body.section;
+  let q = query(
+    collection(database, "DAK counts"),
+    where("Date.month", "==", month),
+    where("Date.year", "==", year)
+  );
+  let querySnap = getDocs(q);
+  let temp = [];
+  querySnap
+    .then((response) => {
+      temp = response.docs.map((item) => {
+        return item.data();
+      });
+      let received = 0;
+      for (let i = 0; i < temp.length; i++) {
+        received += temp[i].DakCount[section - 1];
+      }
+      console.log(received);
+      q = query(
+        collection(database, "section" + section),
+        where("Date.month", "==", month),
+        where("Date.year", "==", year)
+      );
+      querySnap = getDocs(q);
+      let temp2;
+      querySnap
+        .then((response) => {
+          temp2 = response.docs.map((item) => {
+            return item.data();
+          });
+          let disposed = 0;
+          for (let i = 0; i < temp2.length; i++) {
+            disposed += temp2[i].disposed;
+          }
+          res.render("MonthlyReport", {
+            month: month,
+            year: year,
+            section: section,
+            received: received,
+            disposed: disposed,
+          });
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+});
+
+//LOGOUT SECTION
 
 app.get("/logout", (req, res) => {
   signOut(auth)
