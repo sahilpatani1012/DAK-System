@@ -52,8 +52,8 @@
     <div class="container mt-3">
       <h2 class="text-center">Daily Dak Monitoring System</h2>
       <h3 class="text-left">User : <%= section %> Head </h3>
-      <h3 class="text-left">Section : <input class="form-control-sm" name="section" id="section" type="text" readonly
-          value=<%=section %> ></h3>
+      <h3 class="text-left">Section : <%= section %>
+      </h3>
     </div>
   </section>
 
@@ -68,24 +68,34 @@
       <div>
         <div class="card text-center bg-dark text-white mb-3">
           <div class="card-body">
-            <h5><%= section %>'s Dak Monitoring</h5>
-            <p class="text-left">Date : <%= date %></p>
-            <p>Dak Received : <%= pendency %></p>
-            <p>Disposed Today : <%= disposed %>  </p>
-            <p>Total Pendency Today : <%= pendency - disposed %> </p>
+            <h5>
+              <%= section %>'s Dak Monitoring
+            </h5>
+            <p class="text-left">Date : <%= date %>
+            </p>
+            <p>Old Pendencies : <%= oldPendency %>
+            </p>
+            <p>Dak Received : <%= received %>
+            </p>
+            <p>Disposed Today : <%= disposed %>
+            </p>
+            <p>Total Pendency Today : <%= received - disposed %>
+            </p>
           </div>
         </div>
         <div>
           <form class="form-control" action="/section-head" method="post">
+            <label for="colFormLabelLg" class="col-sm-3 col-form-label col-form-label-lg">Today's Total
+              Disposal:</label>
             <div class="row mt-3">
-              <label for="colFormLabelLg" class="col-sm-3 col-form-label col-form-label-lg">Today's Total
-                Disposal:</label>
               <div class="col-sm-3">
-                <input class="form-control form-control-lg" name="section" id="section" type="text" readonly
-                  value=<%=section %> >
-              </div>
-              <div class="col-sm-3">
-                <input name="disposed" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+                <label for="section">Section:</label>
+                <input id="section" name="section" class="form-control form-control-lg" readonly value= <%= section %>  type="text">
+                <label for="sessionID">Session ID:</label>
+                <input class="form-control form-control-lg" name="sessionID" id="sessionID" type="text" readonly
+                  value=<%= sessionID %> >
+                <label for="disposedCount">Disposed today:</label>
+                <input name="disposed" type="number" class="form-control form-control-lg" id="disposedCount"
                   placeholder="Enter the number">
               </div>
             </div>
@@ -94,9 +104,6 @@
         </form>
       </div>
   </section>
-
-
-
 
   <script>
     //for fetching date

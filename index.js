@@ -7,17 +7,17 @@ import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  sendPasswordResetEmail,
 } from "firebase/auth";
 import ejs from "ejs";
 import {
-  doc,
   collection,
   addDoc,
+  getDoc,
   getDocs,
   query,
   where,
   updateDoc,
+  doc,
 } from "firebase/firestore";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -78,8 +78,7 @@ const sections = [
 ];
 
 //Database collection functions -----------------------------------------
-// const collectionRef = collection(database, "DAKs");
-// const dakCountRef = collection(database, "DAK counts");
+
 const Establishment = collection(database, "Establishment");
 const Justice = collection(database, "Justice");
 const Revenue = collection(database, "Revenue");
@@ -220,6 +219,8 @@ app.post("/received-section", (req, res) => {
         year: date.getFullYear(),
       },
       Received: DAKsReceived[i],
+      disposed: 0,
+      pendency: 0,
     })
       .then(() => {
         res.send(
@@ -232,6 +233,8 @@ app.post("/received-section", (req, res) => {
   }
 });
 
+//SECTION HEAD SECTION
+
 app.get("/section-head", (req, res) => {
   let dateObj = new Date();
   let date = dateObj.getDate();
@@ -243,601 +246,1186 @@ app.get("/section-head", (req, res) => {
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      const q = query(
-        collection(database, "DAK counts"),
-        where("Date.date", "==", date),
-        where("Date.month", "==", month),
-        where("Date.year", "==", year)
-      );
-      const querySnap = getDocs(q);
-      querySnap
-        .then((response) => {
-          allDAKcount = response.docs.map((item) => {
-            return item.data();
-          });
-          console.log(allDAKcount);
-          let countArr = allDAKcount[0].DakCount;
-          let q, querySnap;
-          switch (email) {
-            case "establishment.sectionhead@gmail.com":
+      let q, querySnap, sectionInfo, prevSectionInfo;
+      switch (email) {
+        case "establishment.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[0],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section1"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[0],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
-              querySnap
-                .then((response) => {
-                  let temp = response.docs.map((item) => {
-                    return item.data();
-                  });
-                  let disposed;
-                  if (temp.length === 0) disposed = 0;
-                  else disposed = temp[0].disposed;
+              querySnap.then((response) => {
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
+                });
+                if (prevSectionInfo.length === 0) {
                   res.render("sectionHead", {
-                    pendency: countArr[0],
+                    section: sections[0],
                     date: dateString,
-                    section: "section1",
-                    disposed: disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[0].id,
                   });
-                })
-                .catch((err) => {
-                  console.log(err.message);
-                });
-              break;
-            case "justice.sectionhead@gmail.com":
-              q = query(
-                collection(database, "section2"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
-              );
-              querySnap = getDocs(q);
-              querySnap
-                .then((response) => {
-                  let temp = response.docs.map((item) => {
-                    return item.data();
-                  });
-                  let disposedCount;
-                  if (temp.length === 0) disposedCount = 0;
-                  else {
-                    disposedCount = temp[0].disposed;
-                  }
+                } else {
                   res.render("sectionHead", {
-                    pendency: countArr[1],
+                    section: sections[0],
                     date: dateString,
-                    section: "section2",
-                    disposed: disposedCount,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id3
                   });
-                })
-                .catch((err) => {
-                  console.log(err.message);
-                });
-              break;
-            case "revenue.sectionhead@gmail.com":
+                }
+              });
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "justice.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[1],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section3"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[1],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
-              querySnap
-                .then((response) => {
-                  let temp = response.docs.map((item) => {
-                    return item.data();
-                  });
-                  let disposed;
-                  if (temp.length === 0) disposed = 0;
-                  else disposed = temp[0].disposed;
+              querySnap.then((response) => {
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
+                });
+                if (prevSectionInfo.length === 0) {
                   res.render("sectionHead", {
-                    pendency: countArr[2],
+                    section: sections[1],
                     date: dateString,
-                    section: "section3",
-                    disposed: disposed,
+                    received: sectionInfo[1].Received,
+                    disposed: sectionInfo[1].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[1].id,
                   });
-                })
-                .catch((err) => {
-                  console.log(err.message);
-                });
-              break;
-            case "assistance.sectionhead@gmail.com":
-              q = query(
-                collection(database, "section4"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
-              );
-              querySnap = getDocs(q);
-              querySnap
-                .then((response) => {
-                  let temp = response.docs.map((item) => {
-                    return item.data();
-                  });
-                  let disposed;
-                  if (temp.length === 0) disposed = 0;
-                  else disposed = temp[0].disposed;
+                } else {
                   res.render("sectionHead", {
-                    pendency: countArr[3],
+                    section: sections[1],
                     date: dateString,
-                    section: "section4",
-                    disposed: disposed,
+                    received: sectionInfo[1].Received,
+                    disposed: sectionInfo[1].disposed,
+                    oldPendency: prevSectionInfo[2].pendency,
+                    sessionID: sectionInfo[1].id,
                   });
-                })
-                .catch((err) => {
-                  console.log(err.message);
-                });
-              break;
-            case "panchayat.sectionhead@gmail.com":
+                }
+              });
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "revenue.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[2],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section5"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[2],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[4],
-                  date: dateString,
-                  section: "section5",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[2],
+                    date: dateString,
+                    received: sectionInfo[2].Received,
+                    disposed: sectionInfo[2].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[2].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[2],
+                    date: dateString,
+                    received: sectionInfo[2].Received,
+                    disposed: sectionInfo[2].disposed,
+                    oldPendency: prevSectionInfo[2].pendency,
+                    sessionID: sectionInfo[2].id,
+                  });
+                }
               });
-              break;
-            case "development.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "assistance.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[3],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section6"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[3],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[5],
-                  date: dateString,
-                  section: "section6",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[3],
+                    date: dateString,
+                    received: sectionInfo[3].Received,
+                    disposed: sectionInfo[3].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[3].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[3],
+                    date: dateString,
+                    received: sectionInfo[3].Received,
+                    disposed: sectionInfo[3].disposed,
+                    oldPendency: prevSectionInfo[3].pendency,
+                    sessionID: sectionInfo[3].id4
+                  });
+                }
               });
-              break;
-            case "accounts.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "panchayat.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[4],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section7"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[4],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[6],
-                  date: dateString,
-                  section: "section7",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[4],
+                    date: dateString,
+                    received: sectionInfo[4].Received,
+                    disposed: sectionInfo[4].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[4].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[4],
+                    date: dateString,
+                    received: sectionInfo[4].Received,
+                    disposed: sectionInfo[4].disposed,
+                    oldPendency: prevSectionInfo[4].pendency,
+                    sessionID: sectionInfo[4].id,
+                  });
+                }
               });
-              break;
-            case "landrecords.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "development.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[5],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section8"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[5],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[7],
-                  date: dateString,
-                  section: "section8",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[5],
+                    date: dateString,
+                    received: sectionInfo[5].Received,
+                    disposed: sectionInfo[5].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[5].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[5],
+                    date: dateString,
+                    received: sectionInfo[5].Received,
+                    disposed: sectionInfo[5].disposed,
+                    oldPendency: prevSectionInfo[5].pendency,
+                    sessionID: sectionInfo[5].id6
+                  });
+                }
               });
-              break;
-            case "singlewindow.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "accounts.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[6],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section9"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[6],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[8],
-                  date: dateString,
-                  section: "section9",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[6],
+                    date: dateString,
+                    received: sectionInfo[6].Received,
+                    disposed: sectionInfo[6].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[6].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[6],
+                    date: dateString,
+                    received: sectionInfo[6].Received,
+                    disposed: sectionInfo[6].disposed,
+                    oldPendency: prevSectionInfo[6].pendency,
+                    sessionID: sectionInfo[6].id7
+                  });
+                }
               });
-              break;
-            case "stores.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "landrecords.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[7],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section10"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[7],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[9],
-                  date: dateString,
-                  section: "section10",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[7],
+                    date: dateString,
+                    received: sectionInfo[7].Received,
+                    disposed: sectionInfo[7].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[7].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[7],
+                    date: dateString,
+                    received: sectionInfo[7].Received,
+                    disposed: sectionInfo[7].disposed,
+                    oldPendency: prevSectionInfo[7].pendency,
+                    sessionID: sectionInfo[7].id8
+                  });
+                }
               });
-              break;
-            case "court.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "singlewindow.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[8],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section11"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[8],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[10],
-                  date: dateString,
-                  section: "section11",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[8],
+                    date: dateString,
+                    received: sectionInfo[8].Received,
+                    disposed: sectionInfo[8].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[8].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[8],
+                    date: dateString,
+                    received: sectionInfo[8].Received,
+                    disposed: sectionInfo[8].disposed,
+                    oldPendency: prevSectionInfo[8].pendency,
+                    sessionID: sectionInfo[8].id,
+                  });
+                }
               });
-              break;
-            case "pdr.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "stores.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[9],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section12"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[9],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[11],
-                  date: dateString,
-                  section: "section12",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[9],
+                    date: dateString,
+                    received: sectionInfo[9].Received,
+                    disposed: sectionInfo[9].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[9].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[9],
+                    date: dateString,
+                    received: sectionInfo[9].Received,
+                    disposed: sectionInfo[9].disposed,
+                    oldPendency: prevSectionInfo[9].pendency,
+                    sessionID: sectionInfo[9].id,
+                  });
+                }
               });
-              break;
-            case "ira.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "court.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[10],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section13"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[10],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[12],
-                  date: dateString,
-                  section: "section13",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[10],
+                    date: dateString,
+                    received: sectionInfo[10].Received,
+                    disposed: sectionInfo[10].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[10].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[10],
+                    date: dateString,
+                    received: sectionInfo[10].Received,
+                    disposed: sectionInfo[10].disposed,
+                    oldPendency: prevSectionInfo[10].pendency,
+                    sessionID: sectionInfo[10].id11
+                  });
+                }
               });
-              break;
-            case "vigilance.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "pdr.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[11],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section14"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[11],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[13],
-                  date: dateString,
-                  section: "section14",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[11],
+                    date: dateString,
+                    received: sectionInfo[11].Received,
+                    disposed: sectionInfo[11].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[11].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[11],
+                    date: dateString,
+                    received: sectionInfo[11].Received,
+                    disposed: sectionInfo[11].disposed,
+                    oldPendency: prevSectionInfo[11].pendency,
+                    sessionID: sectionInfo[11].id12
+                  });
+                }
               });
-              break;
-            case "generaladministration.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "ira.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[12],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section15"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[12],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[14],
-                  date: dateString,
-                  section: "section15",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[12],
+                    date: dateString,
+                    received: sectionInfo[12].Received,
+                    disposed: sectionInfo[12].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[12].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[12],
+                    date: dateString,
+                    received: sectionInfo[12].Received,
+                    disposed: sectionInfo[12].disposed,
+                    oldPendency: prevSectionInfo[12].pendency,
+                    sessionID: sectionInfo[12].id13
+                  });
+                }
               });
-              break;
-            case "law.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "vigilance.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[13],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section16"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[13],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[15],
-                  date: dateString,
-                  section: "section16",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[13],
+                    date: dateString,
+                    received: sectionInfo[13].Received,
+                    disposed: sectionInfo[13].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[13].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[13],
+                    date: dateString,
+                    received: sectionInfo[13].Received,
+                    disposed: sectionInfo[13].disposed,
+                    oldPendency: prevSectionInfo[13].pendency,
+                    sessionID: sectionInfo[13].id14
+                  });
+                }
               });
-              break;
-            case "records.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "generaladministration.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[14],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section17"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[14],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[16],
-                  date: dateString,
-                  section: "section17",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[14],
+                    date: dateString,
+                    received: sectionInfo[14].Received,
+                    disposed: sectionInfo[14].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[14].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[14],
+                    date: dateString,
+                    received: sectionInfo[14].Received,
+                    disposed: sectionInfo[14].disposed,
+                    oldPendency: prevSectionInfo[14].pendency,
+                    sessionID: sectionInfo[14].id15
+                  });
+                }
               });
-              break;
-            case "estates.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "law.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[15],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section18"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[15],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[17],
-                  date: dateString,
-                  section: "section18",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[15],
+                    date: dateString,
+                    received: sectionInfo[15].Received,
+                    disposed: sectionInfo[15].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[15].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[15],
+                    date: dateString,
+                    received: sectionInfo[15].Received,
+                    disposed: sectionInfo[15].disposed,
+                    oldPendency: prevSectionInfo[15].pendency,
+                    sessionID: sectionInfo[15].id16
+                  });
+                }
               });
-              break;
-            case "dra.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "records.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[16],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section19"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[16],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[18],
-                  date: dateString,
-                  section: "section19",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[16],
+                    date: dateString,
+                    received: sectionInfo[16].Received,
+                    disposed: sectionInfo[16].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[16].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[16],
+                    date: dateString,
+                    received: sectionInfo[16].Received,
+                    disposed: sectionInfo[16].disposed,
+                    oldPendency: prevSectionInfo[16].pendency,
+                    sessionID: sectionInfo[16].id,
+                  });
+                }
               });
-              break;
-            case "elections.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "estates.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[17],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section20"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[17],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[19],
-                  date: dateString,
-                  section: "section20",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[17],
+                    date: dateString,
+                    received: sectionInfo[17].Received,
+                    disposed: sectionInfo[17].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[17].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[17],
+                    date: dateString,
+                    received: sectionInfo[17].Received,
+                    disposed: sectionInfo[17].disposed,
+                    oldPendency: prevSectionInfo[17].pendency,
+                    sessionID: sectionInfo[17].id18
+                  });
+                }
               });
-              break;
-            case "letterdispatch.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "dra.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[18],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section21"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[18],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[20],
-                  date: dateString,
-                  section: "section21",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[18],
+                    date: dateString,
+                    received: sectionInfo[18].Received,
+                    disposed: sectionInfo[18].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[18].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[18],
+                    date: dateString,
+                    received: sectionInfo[18].Received,
+                    disposed: sectionInfo[18].disposed,
+                    oldPendency: prevSectionInfo[18].pendency,
+                    sessionID: sectionInfo[18].id19
+                  });
+                }
               });
-              break;
-            case "cbsection.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "elections.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[19],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section22"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[19],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[21],
-                  date: dateString,
-                  section: "section22",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[19],
+                    date: dateString,
+                    received: sectionInfo[19].Received,
+                    disposed: sectionInfo[19].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[19].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[19],
+                    date: dateString,
+                    received: sectionInfo[19].Received,
+                    disposed: sectionInfo[19].disposed,
+                    oldPendency: prevSectionInfo[19].pendency,
+                    sessionID: sectionInfo[19].id,
+                  });
+                }
               });
-              break;
-            case "publicgrievances.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "letterdispatch.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[20],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section23"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[20],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[22],
-                  date: dateString,
-                  section: "section23",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[20],
+                    date: dateString,
+                    received: sectionInfo[20].Received,
+                    disposed: sectionInfo[20].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[20].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[20],
+                    date: dateString,
+                    received: sectionInfo[20].Received,
+                    disposed: sectionInfo[20].disposed,
+                    oldPendency: prevSectionInfo[20].pendency,
+                    sessionID: sectionInfo[20].id222
+                  });
+                }
               });
-              break;
-            case "loans.sectionhead@gmail.com":
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "cbsection.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[21],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
               q = query(
-                collection(database, "section24"),
-                where("Date.date", "==", date),
-                where("Date.month", "==", month),
-                where("Date.year", "==", year)
+                sectionDatabases[222],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
               );
               querySnap = getDocs(q);
               querySnap.then((response) => {
-                let temp = response.docs.map((item) => {
-                  return item.data();
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
                 });
-                let disposed;
-                if (temp.length === 0) disposed = 0;
-                else disposed = temp[0].disposed;
-                res.render("sectionHead", {
-                  pendency: countArr[23],
-                  date: dateString,
-                  section: "section24",
-                  disposed: disposed,
-                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[222],
+                    date: dateString,
+                    received: sectionInfo[222].Received,
+                    disposed: sectionInfo[222].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[222].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[222],
+                    date: dateString,
+                    received: sectionInfo[222].Received,
+                    disposed: sectionInfo[222].disposed,
+                    oldPendency: prevSectionInfo[222].pendency,
+                  });
+                }
               });
-              break;
-
-            default:
-              res.render("login");
-              break;
-          }
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "publicgrievances.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[22],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
+              q = query(
+                sectionDatabases[22],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
+                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[22],
+                    date: dateString,
+                    received: sectionInfo[22].Received,
+                    disposed: sectionInfo[22].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[22].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[22],
+                    date: dateString,
+                    received: sectionInfo[22].Received,
+                    disposed: sectionInfo[22].disposed,
+                    oldPendency: prevSectionInfo[22].pendency,
+                    sessionID: sectionInfo[22].id23
+                  });
+                }
+              });
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        case "loans.sectionhead@gmail.com":
+          q = query(
+            sectionDatabases[23],
+            where("DateStamp.date", "==", date),
+            where("DateStamp.month", "==", month),
+            where("DateStamp.year", "==", year)
+          );
+          querySnap = getDocs(q);
+          querySnap
+            .then((response) => {
+              sectionInfo = response.docs.map((item) => {
+                return { ...item.data(), id: item.id };
+              });
+              q = query(
+                sectionDatabases[23],
+                where("DateStamp.date", "==", date - 1),
+                where("DateStamp.month", "==", month),
+                where("DateStamp.year", "==", year)
+              );
+              querySnap = getDocs(q);
+              querySnap.then((response) => {
+                prevSectionInfo = response.docs.map((item) => {
+                  return { ...item.data(), id: item.id };
+                });
+                if (prevSectionInfo.length === 0) {
+                  res.render("sectionHead", {
+                    section: sections[23],
+                    date: dateString,
+                    received: sectionInfo[23].Received,
+                    disposed: sectionInfo[23].disposed,
+                    oldPendency: 0,
+                    sessionID: sectionInfo[23].id,
+                  });
+                } else {
+                  res.render("sectionHead", {
+                    section: sections[23],
+                    date: dateString,
+                    received: sectionInfo[23].Received,
+                    disposed: sectionInfo[23].disposed,
+                    oldPendency: prevSectionInfo[23].pendency,
+                    sessionID: sectionInfo[23].id,
+                  });
+                }
+              });
+            })
+            .catch((err) => {
+              res.send(err.message);
+            });
+          break;
+        default:
+          break;
+      }
     } else {
       res.render("login");
     }
@@ -846,102 +1434,26 @@ app.get("/section-head", (req, res) => {
 
 app.post("/section-head", (req, res) => {
   const disposed = {
+    sessionID: req.body.sessionID,
     section: req.body.section,
-    disposed: req.body.disposed,
+    disposed: parseInt(req.body.disposed),
   };
-  let sectionCollection;
-  switch (disposed.section) {
-    case "section1":
-      sectionCollection = section1;
-      break;
-    case "section2":
-      sectionCollection = section2;
-      break;
-    case "section3":
-      sectionCollection = section3;
-      break;
-    case "section4":
-      sectionCollection = section4;
-      break;
-    case "section5":
-      sectionCollection = section5;
-      break;
-    case "section6":
-      sectionCollection = section6;
-      break;
-    case "section7":
-      sectionCollection = section7;
-      break;
-    case "section8":
-      sectionCollection = section8;
-      break;
-    case "section9":
-      sectionCollection = section9;
-      break;
-    case "section10":
-      sectionCollection = section10;
-      break;
-    case "section11":
-      sectionCollection = section11;
-      break;
-    case "section12":
-      sectionCollection = section12;
-      break;
-    case "section13":
-      sectionCollection = section13;
-      break;
-    case "section14":
-      sectionCollection = section14;
-      break;
-    case "section15":
-      sectionCollection = section15;
-      break;
-    case "section16":
-      sectionCollection = section16;
-      break;
-    case "section17":
-      sectionCollection = section17;
-      break;
-    case "section18":
-      sectionCollection = section18;
-      break;
-    case "section19":
-      sectionCollection = section19;
-      break;
-    case "section20":
-      sectionCollection = section20;
-      break;
-    case "section21":
-      sectionCollection = section21;
-      break;
-    case "section22":
-      sectionCollection = section22;
-      break;
-    case "section23":
-      sectionCollection = section23;
-      break;
-    case "section24":
-      sectionCollection = section24;
-      break;
-
-    default:
-      break;
-  }
-  let date = new Date();
-  addDoc(sectionCollection, {
-    Date: {
-      month: months[date.getMonth()],
-      date: date.getDate(),
-      year: date.getFullYear(),
-    },
-    disposed: parseInt(disposed.disposed),
+  let docSnap;
+  let docRef = doc(database,disposed.section,disposed.sessionID);
+  getDoc(docRef)
+  .then((response)=>{
+    docSnap = response.data();
+    if(docSnap.disposed === 0){
+      updateDoc(docRef,{
+        disposed: disposed.disposed,
+        pendency: docSnap.Received - disposed.disposed
+      })
+      res.send("Disposed count updated! <a href='/section-head'>Go Back</a>")
+    }
+    else{
+      res.send("Sorry today's disposed is already recorded! Try again tomorrow. <a href='/section-head'>Go Back</a>")
+    }
   })
-    .then(() => {
-      res.send("Disposed count submitted successfully!");
-    })
-    .catch((err) => {
-      res.send(err.message);
-    });
 });
 
 //COLLECTOR SECTION
