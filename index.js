@@ -1,5 +1,5 @@
 //Imports --------------------------------------------------------
-import express from "express";
+import express, { response } from "express";
 const app = express();
 import { application, database } from "./firebaseConfig.js";
 import {
@@ -17,10 +17,10 @@ import {
   query,
   where,
   updateDoc,
-  doc,
 } from "firebase/firestore";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import { async } from "@firebase/util";
 
 //Necessary inclusions ---------------------------------------------------
 const __filename = fileURLToPath(import.meta.url);
@@ -1477,77 +1477,137 @@ app.get("/report", (req, res) => {
   return;
 });
 
-app.post("/daily-report", (req, res) => {
+app.post("/daily-report", async (req, res) => {
   const section = req.body.section;
   let dateObj = new Date(req.body.datepicker);
   let day = dateObj.getDate();
   let month = months[dateObj.getMonth()];
   let year = dateObj.getFullYear();
   let dateString = day + "/" + month + "/" + year;
-  let q = query(
-    collection(database, section),
-    where("DateStamp.date", "==", day),
-    where("DateStamp.month", "==", month),
-    where("DateStamp.year", "==", year)
-  );
-  let querySnap = getDocs(q);
-  let docSnap;
-  querySnap
-    .then((response) => {
-      docSnap = response.docs.map((item) => {
-        return item.data();
-      });
-      let efficiency = Math.round(
-        (docSnap[0].disposed / docSnap[0].Received) * 100
+
+  let allSection = [];
+
+  if (section === "All") {
+    for (let i = 0; i < sections.length; i++) {
+      let queryAll = query(
+        collection(database, sections[i]),
+        where("DateStamp.date", "==", day),
+        where("DateStamp.month", "==", month),
+        where("DateStamp.year", "==", year)
       );
-      res.render("DailyReport", {
-        date: dateString,
-        section: section,
-        received: docSnap[0].Received,
-        disposed: docSnap[0].disposed,
-        efficiency: efficiency,
+      let querySnap = await getDocs(queryAll);
+      querySnap.forEach((docFile) => {
+        allSection.push(docFile.data());
       });
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+    }
+    for (let i = 0; i < allSection.length; i++) {
+      let efficiency = Math.round(
+        (allSection[i].disposed / allSection[i].Received) * 100
+      );
+      allSection[i] = {
+        ...allSection[i],
+        efficiency: efficiency,
+        section: sections[i],
+      };
+    }
+    allSection.sort((a, b) => parseInt(b.efficiency) - parseInt(a.efficiency));
+    res.render("DailyReportAll", { allSection: allSection, date: dateString });
+  } else {
+    let q = query(
+      collection(database, section),
+      where("DateStamp.date", "==", day),
+      where("DateStamp.month", "==", month),
+      where("DateStamp.year", "==", year)
+    );
+    let querySnap = getDocs(q);
+    let docSnap;
+    querySnap
+      .then((response) => {
+        docSnap = response.docs.map((item) => {
+          return item.data();
+        });
+        let efficiency = Math.round(
+          (docSnap[0].disposed / docSnap[0].Received) * 100
+        );
+        res.render("DailyReport", {
+          date: dateString,
+          section: section,
+          received: docSnap[0].Received,
+          disposed: docSnap[0].disposed,
+          efficiency: efficiency,
+        });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
 });
 
-app.post("/monthly-report", (req, res) => {
-  const month = req.body.month;
-  const year = parseInt(req.body.year);
+app.post("/monthly-report", async (req, res) => {
+  const monthFetched = req.body.month;
+  const yearFetched = parseInt(req.body.year);
   const section = req.body.section;
-  let q = query(
-    collection(database, section),
-    where("DateStamp.month", "==", month),
-    where("DateStamp.year", "==", year)
-  );
-  let querySnap = getDocs(q);
-  let docSnap;
-  querySnap
-    .then((response) => {
-      docSnap = response.docs.map((item) => {
-        return item.data();
-      });
+
+  let allSection = [];
+
+  if (section === "All") {
+    for (let i = 0; i < sections.length; i++) {
+      let queryAll = query(
+        collection(database, sections[i]),
+        where("DateStamp.month", "==", monthFetched),
+        where("DateStamp.year", "==", yearFetched)
+      );
+      let querySnap = await getDocs(queryAll);
+      let tempObj = {};
       let received = 0;
       let disposed = 0;
-      for (let i = 0; i < docSnap.length; i++) {
-        received += docSnap[i].Received;
-        disposed += docSnap[i].disposed;
-      }
-      let efficiency = Math.round((disposed / received) * 100);
-      res.render("MonthlyReport", {
-        month: month,
-        year: year,
-        section: section,
-        received: received,
-        disposed: disposed,
-        efficiency: efficiency,
+      let month,year;
+      querySnap.forEach((docFile) => {
+        let data = docFile.data();
+        received += data.Received;
+        disposed += data.disposed;
+        month = data.DateStamp.month;
+        year = data.DateStamp.year;
+      })
+      let efficiency = Math.round((disposed/received)*100)
+      tempObj = {section:sections[i], disposed: disposed, DateStamp:{month:month,year:year}, received: received,efficiency:efficiency};
+      allSection.push(tempObj);
+    }
+    allSection.sort((a, b) => parseInt(b.efficiency) - parseInt(a.efficiency));
+    res.render("MonthlyReportAll",{ allSection:allSection })
+  } else {
+    let q = query(
+      collection(database, section),
+      where("DateStamp.month", "==", month),
+      where("DateStamp.year", "==", year)
+    );
+    let querySnap = getDocs(q);
+    let docSnap;
+    querySnap
+      .then((response) => {
+        docSnap = response.docs.map((item) => {
+          return item.data();
+        });
+        let received = 0;
+        let disposed = 0;
+        for (let i = 0; i < docSnap.length; i++) {
+          received += docSnap[i].Received;
+          disposed += docSnap[i].disposed;
+        }
+        let efficiency = Math.round((disposed / received) * 100);
+        res.render("MonthlyReport", {
+          month: month,
+          year: year,
+          section: section,
+          received: received,
+          disposed: disposed,
+          efficiency: efficiency,
+        });
+      })
+      .catch((err) => {
+        console.log(err.message);
       });
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+  }
 });
 
 //LOGOUT SECTION
