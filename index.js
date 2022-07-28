@@ -220,7 +220,7 @@ app.post("/received-section", (req, res) => {
       },
       Received: DAKsReceived[i],
       disposed: 0,
-      pendency: 0,
+      pendency: DAKsReceived[i],
     })
       .then(() => {
         res.send(
@@ -288,7 +288,7 @@ app.get("/section-head", (req, res) => {
                     received: sectionInfo[0].Received,
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id3,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -325,19 +325,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[1],
                     date: dateString,
-                    received: sectionInfo[1].Received,
-                    disposed: sectionInfo[1].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[1].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[1],
                     date: dateString,
-                    received: sectionInfo[1].Received,
-                    disposed: sectionInfo[1].disposed,
-                    oldPendency: prevSectionInfo[2].pendency,
-                    sessionID: sectionInfo[1].id,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -359,6 +359,7 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              console.log(sectionInfo);
               q = query(
                 sectionDatabases[2],
                 where("DateStamp.date", "==", date - 1),
@@ -374,19 +375,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[2],
                     date: dateString,
-                    received: sectionInfo[2].Received,
-                    disposed: sectionInfo[2].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[2].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[2],
                     date: dateString,
-                    received: sectionInfo[2].Received,
-                    disposed: sectionInfo[2].disposed,
-                    oldPendency: prevSectionInfo[2].pendency,
-                    sessionID: sectionInfo[2].id,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -423,19 +424,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[3],
                     date: dateString,
-                    received: sectionInfo[3].Received,
-                    disposed: sectionInfo[3].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[3].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[3],
                     date: dateString,
-                    received: sectionInfo[3].Received,
-                    disposed: sectionInfo[3].disposed,
-                    oldPendency: prevSectionInfo[3].pendency,
-                    sessionID: sectionInfo[3].id4,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -472,19 +473,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[4],
                     date: dateString,
-                    received: sectionInfo[4].Received,
-                    disposed: sectionInfo[4].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[4].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[4],
                     date: dateString,
-                    received: sectionInfo[4].Received,
-                    disposed: sectionInfo[4].disposed,
-                    oldPendency: prevSectionInfo[4].pendency,
-                    sessionID: sectionInfo[4].id,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -521,19 +522,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[5],
                     date: dateString,
-                    received: sectionInfo[5].Received,
-                    disposed: sectionInfo[5].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[5].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[5],
                     date: dateString,
-                    received: sectionInfo[5].Received,
-                    disposed: sectionInfo[5].disposed,
-                    oldPendency: prevSectionInfo[5].pendency,
-                    sessionID: sectionInfo[5].id6,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -570,19 +571,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[6],
                     date: dateString,
-                    received: sectionInfo[6].Received,
-                    disposed: sectionInfo[6].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[6].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[6],
                     date: dateString,
-                    received: sectionInfo[6].Received,
-                    disposed: sectionInfo[6].disposed,
-                    oldPendency: prevSectionInfo[6].pendency,
-                    sessionID: sectionInfo[6].id7,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -619,19 +620,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[7],
                     date: dateString,
-                    received: sectionInfo[7].Received,
-                    disposed: sectionInfo[7].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[7].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[7],
                     date: dateString,
-                    received: sectionInfo[7].Received,
-                    disposed: sectionInfo[7].disposed,
-                    oldPendency: prevSectionInfo[7].pendency,
-                    sessionID: sectionInfo[7].id8,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -668,19 +669,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[8],
                     date: dateString,
-                    received: sectionInfo[8].Received,
-                    disposed: sectionInfo[8].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[8].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[8],
                     date: dateString,
-                    received: sectionInfo[8].Received,
-                    disposed: sectionInfo[8].disposed,
-                    oldPendency: prevSectionInfo[8].pendency,
-                    sessionID: sectionInfo[8].id,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -717,19 +718,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[9],
                     date: dateString,
-                    received: sectionInfo[9].Received,
-                    disposed: sectionInfo[9].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[9].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[9],
                     date: dateString,
-                    received: sectionInfo[9].Received,
-                    disposed: sectionInfo[9].disposed,
-                    oldPendency: prevSectionInfo[9].pendency,
-                    sessionID: sectionInfo[9].id,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -766,19 +767,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[10],
                     date: dateString,
-                    received: sectionInfo[10].Received,
-                    disposed: sectionInfo[10].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[10].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[10],
                     date: dateString,
-                    received: sectionInfo[10].Received,
-                    disposed: sectionInfo[10].disposed,
-                    oldPendency: prevSectionInfo[10].pendency,
-                    sessionID: sectionInfo[10].id11,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -815,19 +816,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[11],
                     date: dateString,
-                    received: sectionInfo[11].Received,
-                    disposed: sectionInfo[11].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[11].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[11],
                     date: dateString,
-                    received: sectionInfo[11].Received,
-                    disposed: sectionInfo[11].disposed,
-                    oldPendency: prevSectionInfo[11].pendency,
-                    sessionID: sectionInfo[11].id12,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -864,19 +865,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[12],
                     date: dateString,
-                    received: sectionInfo[12].Received,
-                    disposed: sectionInfo[12].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[12].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[12],
                     date: dateString,
-                    received: sectionInfo[12].Received,
-                    disposed: sectionInfo[12].disposed,
-                    oldPendency: prevSectionInfo[12].pendency,
-                    sessionID: sectionInfo[12].id13,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -913,19 +914,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[13],
                     date: dateString,
-                    received: sectionInfo[13].Received,
-                    disposed: sectionInfo[13].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[13].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[13],
                     date: dateString,
-                    received: sectionInfo[13].Received,
-                    disposed: sectionInfo[13].disposed,
-                    oldPendency: prevSectionInfo[13].pendency,
-                    sessionID: sectionInfo[13].id14,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -962,19 +963,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[14],
                     date: dateString,
-                    received: sectionInfo[14].Received,
-                    disposed: sectionInfo[14].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[14].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[14],
                     date: dateString,
-                    received: sectionInfo[14].Received,
-                    disposed: sectionInfo[14].disposed,
-                    oldPendency: prevSectionInfo[14].pendency,
-                    sessionID: sectionInfo[14].id15,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -1011,19 +1012,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[15],
                     date: dateString,
-                    received: sectionInfo[15].Received,
-                    disposed: sectionInfo[15].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[15].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[15],
                     date: dateString,
-                    received: sectionInfo[15].Received,
-                    disposed: sectionInfo[15].disposed,
-                    oldPendency: prevSectionInfo[15].pendency,
-                    sessionID: sectionInfo[15].id16,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -1060,19 +1061,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[16],
                     date: dateString,
-                    received: sectionInfo[16].Received,
-                    disposed: sectionInfo[16].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[16].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[16],
                     date: dateString,
-                    received: sectionInfo[16].Received,
-                    disposed: sectionInfo[16].disposed,
-                    oldPendency: prevSectionInfo[16].pendency,
-                    sessionID: sectionInfo[16].id,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -1109,19 +1110,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[17],
                     date: dateString,
-                    received: sectionInfo[17].Received,
-                    disposed: sectionInfo[17].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[17].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[17],
                     date: dateString,
-                    received: sectionInfo[17].Received,
-                    disposed: sectionInfo[17].disposed,
-                    oldPendency: prevSectionInfo[17].pendency,
-                    sessionID: sectionInfo[17].id18,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -1158,19 +1159,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[18],
                     date: dateString,
-                    received: sectionInfo[18].Received,
-                    disposed: sectionInfo[18].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[18].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[18],
                     date: dateString,
-                    received: sectionInfo[18].Received,
-                    disposed: sectionInfo[18].disposed,
-                    oldPendency: prevSectionInfo[18].pendency,
-                    sessionID: sectionInfo[18].id19,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -1207,19 +1208,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[19],
                     date: dateString,
-                    received: sectionInfo[19].Received,
-                    disposed: sectionInfo[19].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[19].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[19],
                     date: dateString,
-                    received: sectionInfo[19].Received,
-                    disposed: sectionInfo[19].disposed,
-                    oldPendency: prevSectionInfo[19].pendency,
-                    sessionID: sectionInfo[19].id,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -1256,19 +1257,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[20],
                     date: dateString,
-                    received: sectionInfo[20].Received,
-                    disposed: sectionInfo[20].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[20].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[20],
                     date: dateString,
-                    received: sectionInfo[20].Received,
-                    disposed: sectionInfo[20].disposed,
-                    oldPendency: prevSectionInfo[20].pendency,
-                    sessionID: sectionInfo[20].id222,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -1291,7 +1292,7 @@ app.get("/section-head", (req, res) => {
                 return { ...item.data(), id: item.id };
               });
               q = query(
-                sectionDatabases[222],
+                sectionDatabases[21],
                 where("DateStamp.date", "==", date - 1),
                 where("DateStamp.month", "==", month),
                 where("DateStamp.year", "==", year)
@@ -1303,20 +1304,21 @@ app.get("/section-head", (req, res) => {
                 });
                 if (prevSectionInfo.length === 0) {
                   res.render("sectionHead", {
-                    section: sections[222],
+                    section: sections[21],
                     date: dateString,
-                    received: sectionInfo[222].Received,
-                    disposed: sectionInfo[222].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[222].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
-                    section: sections[222],
+                    section: sections[21],
                     date: dateString,
-                    received: sectionInfo[222].Received,
-                    disposed: sectionInfo[222].disposed,
-                    oldPendency: prevSectionInfo[222].pendency,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -1353,19 +1355,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[22],
                     date: dateString,
-                    received: sectionInfo[22].Received,
-                    disposed: sectionInfo[22].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[22].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[22],
                     date: dateString,
-                    received: sectionInfo[22].Received,
-                    disposed: sectionInfo[22].disposed,
-                    oldPendency: prevSectionInfo[22].pendency,
-                    sessionID: sectionInfo[22].id23,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
@@ -1402,19 +1404,19 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[23],
                     date: dateString,
-                    received: sectionInfo[23].Received,
-                    disposed: sectionInfo[23].disposed,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[23].id,
+                    sessionID: sectionInfo[0].id,
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[23],
                     date: dateString,
-                    received: sectionInfo[23].Received,
-                    disposed: sectionInfo[23].disposed,
-                    oldPendency: prevSectionInfo[23].pendency,
-                    sessionID: sectionInfo[23].id,
+                    received: sectionInfo[0].Received,
+                    disposed: sectionInfo[0].disposed,
+                    oldPendency: prevSectionInfo[0].pendency,
+                    sessionID: sectionInfo[0].id,
                   });
                 }
               });
