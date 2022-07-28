@@ -1580,8 +1580,8 @@ app.post("/monthly-report", async (req, res) => {
   } else {
     let q = query(
       collection(database, section),
-      where("DateStamp.month", "==", month),
-      where("DateStamp.year", "==", year)
+      where("DateStamp.month", "==", monthFetched),
+      where("DateStamp.year", "==", yearFetched)
     );
     let querySnap = getDocs(q);
     let docSnap;
