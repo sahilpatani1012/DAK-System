@@ -1598,8 +1598,8 @@ app.post("/monthly-report", async (req, res) => {
         }
         let efficiency = Math.round((disposed / received) * 100);
         res.render("MonthlyReport", {
-          month: month,
-          year: year,
+          month: monthFetched,
+          year: yearFetched,
           section: section,
           received: received,
           disposed: disposed,
