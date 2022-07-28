@@ -20,9 +20,6 @@
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
     <div class="container">
       <a href="/" class="navbar-brand">Dak Portal</a>
-      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-      </button>
       <ul class="navbar-nav justify-content-end">
         <li class="nav-item">
           <a href="/logout" class="nav-link">
@@ -91,8 +88,8 @@
               <div class="col-sm-3">
                 <label for="section">Section:</label>
                 <input id="section" name="section" class="form-control form-control-lg" readonly value= <%= section %>  type="text">
-                <label for="sessionID">Session ID:</label>
-                <input class="form-control form-control-lg" name="sessionID" id="sessionID" type="text" readonly
+                <label hidden for="sessionID">Session ID:</label>
+                <input hidden class="form-control form-control-lg" name="sessionID" id="sessionID" type="text" readonly
                   value=<%= sessionID %> >
                 <label for="disposedCount">Disposed today:</label>
                 <input name="disposed" type="number" class="form-control form-control-lg" id="disposedCount"

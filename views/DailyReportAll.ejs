@@ -14,7 +14,29 @@
     />
   </head>
   <body>
-    <table class="table">
+        <!--Navbar-->
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
+          <div class="container">
+            <a href="/" class="navbar-brand">Dak Portal</a>
+          </div>
+        </nav>
+        
+        <!--Header-->
+        <header id="main-header" class="py-2 bg-black text-white">
+          <div class="container">
+            <div class="row">
+              <div class="text-center">
+                <h1>Government Of Rajasthan</h1>
+                <h2>Office Of District Collector</h2>
+                <h3>District Jaipur</h3>
+              </div>
+            </div>
+          </div>
+        </header>
+    
+        <h1 class="my-4 text-center">Daily Report</h1>
+    <div class="container">
+    <table class="table" id="dailyReportAll">
       <thead>
         <tr>
           <th scope="col">Date</th>
@@ -36,5 +58,20 @@
         <% } %> 
       </tbody>
     </table>
+    <div class="my-4 text-center">
+      <button type="submit" id="getDailyReportAll" class="btn btn-outline-success">Download</button>
+      <a href="/report"><button class="btn btn-outline-danger">Back to Collector Page</button></a>
+    </div>
+  </div>
+  <!--Code to convert given report into excel format and download it-->
+  <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+    <script>
+      let button = document.querySelector("#getDailyReportAll");
+
+      button.addEventListener("click", e => {
+      let table = document.querySelector("#dailyReportAll");
+      TableToExcel.convert(table);
+      });
+    </script>
   </body>
 </html>

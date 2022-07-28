@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Daily Report</title>
+    <title>Monthly Report</title>
     <!-- CSS only -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
@@ -14,7 +14,32 @@
     />
   </head>
   <body>
-    <table class="table">
+
+    <!--Navbar-->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
+      <div class="container">
+        <a href="/" class="navbar-brand">Dak Portal</a>
+      </div>
+    </nav>
+
+    <!--Header-->
+    <header id="main-header" class="py-2 bg-black text-white">
+      <div class="container">
+        <div class="row">
+          <div class="text-center">
+            <h1>Government Of Rajasthan</h1>
+            <h2>Office Of District Collector</h2>
+            <h3>District Jaipur</h3>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <h1 class="my-4 text-center">Monthly Report</h1>
+
+    <!--Table section-->
+    <div class="container">
+    <table class="table" id="monthlyReportAll">
       <thead>
         <tr>
           <th scope="col">Month</th>
@@ -38,5 +63,21 @@
         <% } %> 
       </tbody>
     </table>
+    <div class="my-4 text-center">
+      <button type="submit" id="getMonthlyReportAll" class="btn btn-outline-success">Download</button>
+      <a href="/report"><button class="btn btn-outline-danger">Back to Collector Page</button></a>
+    </div>
+  </div>
+
+  <!--Code to convert given report into excel format and download it-->
+  <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+    <script>
+      let button = document.querySelector("#getMonthlyReportAll");
+
+      button.addEventListener("click", e => {
+      let table = document.querySelector("#monthlyReportAll");
+      TableToExcel.convert(table);
+      });
+    </script>
   </body>
 </html>
