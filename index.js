@@ -151,7 +151,7 @@ app.get("/", (req, res) => {
 //LOGIN SECTION
 
 app.get("/login", (req, res) => {
-  res.render("login",{ message: req.flash("message") });
+  res.render("login", { message: req.flash("message") });
   return;
 });
 
@@ -170,7 +170,7 @@ app.post("/login", (req, res) => {
       }
     })
     .catch((error) => {
-      req.flash("message","Invalid login credentials!")
+      req.flash("message", "Invalid login credentials!");
       res.redirect("/login");
     });
 });
@@ -184,7 +184,10 @@ app.get("/received-section", (req, res) => {
   let year = dateObj.getFullYear();
   let displayDate = date + " " + month + " " + year;
   const currentUser = auth.currentUser;
-  if (currentUser === null) res.redirect("/login");
+  if (currentUser === null) {
+    res.redirect("/login");
+    return;
+  }
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
     if (user && email.includes("employee")) {
@@ -254,7 +257,10 @@ app.get("/section-head", (req, res) => {
   let year = dateObj.getFullYear();
   let dateString = date + "/" + month + "/" + year;
   const currentUser = auth.currentUser;
-  if (currentUser === null) res.redirect("/login");
+  if (currentUser === null) {
+    res.redirect("/login");
+    return;
+  }
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -1520,10 +1526,13 @@ app.post("/section-head", async (req, res) => {
   let docRef = doc(database, disposed.section, disposed.sessionID);
   getDoc(docRef).then((response) => {
     docSnap = response.data();
-    if (docSnap.Received + prevDocSnap.pendency < disposed.disposed) {
+    if (
+      docSnap.Received + prevDocSnap.pendency < disposed.disposed ||
+      disposed.disposed < 0
+    ) {
       req.flash(
         "message",
-        "Disposed count is mode than the pendencies. Please enter a valid disposed count!"
+        "Disposed count is invalid. Please enter a valid disposed count!"
       );
       res.redirect("/section-head");
       return;
@@ -1534,10 +1543,7 @@ app.post("/section-head", async (req, res) => {
         disposed: disposed.disposed,
         pendency: prevDocSnap.pendency + docSnap.Received - disposed.disposed,
       });
-      req.flash(
-        "message",
-        "Disposed count submitted"
-      );
+      req.flash("message", "Disposed count submitted");
       res.redirect("/section-head");
       return;
     } else {
@@ -1560,7 +1566,10 @@ app.get("/report", (req, res) => {
   let year = date.getFullYear();
   date = day + "/" + month + "/" + year;
   const currentUser = auth.currentUser;
-  if (currentUser === null) res.redirect("/login");
+  if (currentUser === null) {
+    res.redirect("/login");
+    return;
+  }
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
     if (user && email === "collector.jaipur@gmail.com") {
