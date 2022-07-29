@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import ejs from "ejs";
 import {
+  doc,
   collection,
   addDoc,
   getDoc,
@@ -21,6 +22,7 @@ import {
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { async } from "@firebase/util";
+import swal from "sweetalert";
 
 //Necessary inclusions ---------------------------------------------------
 const __filename = fileURLToPath(import.meta.url);
@@ -1434,20 +1436,40 @@ app.get("/section-head", (req, res) => {
   });
 });
 
-app.post("/section-head", (req, res) => {
+app.post("/section-head", async (req, res) => {
+  let dateObj = new Date();
+  let date = dateObj.getDate();
+  let month = months[dateObj.getMonth()];
+  let year = dateObj.getFullYear();
   const disposed = {
     sessionID: req.body.sessionID,
     section: req.body.section,
     disposed: parseInt(req.body.disposed),
   };
   let docSnap;
+  let prevDocSnap;
+  let q = query(
+    collection(database, disposed.section),
+    where("DateStamp.date", "==", date - 1),
+    where("DateStamp.month", "==", month),
+    where("DateStamp.year", "==", year)
+  );
+  let querySnap = await getDocs(q);
+  querySnap.forEach((prevDoc)=>{
+    prevDocSnap = prevDoc.data();
+  })
   let docRef = doc(database, disposed.section, disposed.sessionID);
   getDoc(docRef).then((response) => {
     docSnap = response.data();
+    if(docSnap.Received + prevDocSnap.pendency < disposed.disposed){
+      res.send("The disposed count is more than the pendencies. Please check the disposed count. <a href='section-head' >Go Back</a>")
+      return;
+    }
+    console.log(docSnap);
     if (docSnap.disposed === 0) {
       updateDoc(docRef, {
         disposed: disposed.disposed,
-        pendency: docSnap.Received - disposed.disposed,
+        pendency: prevDocSnap.pendency + docSnap.Received - disposed.disposed,
       });
       res.send("Disposed count updated! <a href='/section-head'>Go Back</a>");
     } else {
@@ -1563,20 +1585,26 @@ app.post("/monthly-report", async (req, res) => {
       let tempObj = {};
       let received = 0;
       let disposed = 0;
-      let month,year;
+      let month, year;
       querySnap.forEach((docFile) => {
         let data = docFile.data();
         received += data.Received;
         disposed += data.disposed;
         month = data.DateStamp.month;
         year = data.DateStamp.year;
-      })
-      let efficiency = Math.round((disposed/received)*100)
-      tempObj = {section:sections[i], disposed: disposed, DateStamp:{month:month,year:year}, received: received,efficiency:efficiency};
+      });
+      let efficiency = Math.round((disposed / received) * 100);
+      tempObj = {
+        section: sections[i],
+        disposed: disposed,
+        DateStamp: { month: month, year: year },
+        received: received,
+        efficiency: efficiency,
+      };
       allSection.push(tempObj);
     }
     allSection.sort((a, b) => parseInt(b.efficiency) - parseInt(a.efficiency));
-    res.render("MonthlyReportAll",{ allSection:allSection })
+    res.render("MonthlyReportAll", { allSection: allSection });
   } else {
     let q = query(
       collection(database, section),

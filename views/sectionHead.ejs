@@ -70,9 +70,9 @@
             </h5>
             <p class="text-left">Date : <%= date %>
             </p>
-            <p>Old Pendencies : <%= oldPendency %>
+            <p>Old Pendencies : <span id="oldPendency"><%= oldPendency %></span>
             </p>
-            <p>Dak Received : <%= received %>
+            <p>Dak Received : <span id="received"><%= received %></span>
             </p>
             <p>Disposed Today : <%= disposed %>
             </p>
@@ -101,13 +101,6 @@
         </form>
       </div>
   </section>
-
-  <script>
-    //for fetching date
-    var newDate = new Date();
-    newDate.setDate(newDate.getDate());
-    document.getElementById('displayDate').innerHTML = (newDate.getMonth() + 1) + '/' + newDate.getDate() + '/' + newDate.getFullYear();
-  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
     crossorigin="anonymous"></script>
