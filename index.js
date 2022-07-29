@@ -21,8 +21,8 @@ import {
 } from "firebase/firestore";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import { async } from "@firebase/util";
-import swal from "sweetalert";
+import flash from "connect-flash";
+import session from "express-session";
 
 //Necessary inclusions ---------------------------------------------------
 const __filename = fileURLToPath(import.meta.url);
@@ -33,6 +33,15 @@ app.use("/assets", express.static(__dirname + "/assets"));
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(flash());
+app.use(
+  session({
+    secret: "secret",
+    cookie: { maxAge: 60000 },
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 //Firebase auth function ----------------------------------------------
 const auth = getAuth();
@@ -142,7 +151,7 @@ app.get("/", (req, res) => {
 //LOGIN SECTION
 
 app.get("/login", (req, res) => {
-  res.render("login");
+  res.render("login",{ message: req.flash("message") });
   return;
 });
 
@@ -161,7 +170,8 @@ app.post("/login", (req, res) => {
       }
     })
     .catch((error) => {
-      res.send("Please check your login credentials!");
+      req.flash("message","Invalid login credentials!")
+      res.redirect("/login");
     });
 });
 
@@ -282,6 +292,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -291,6 +302,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -331,6 +343,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -340,6 +353,8 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -381,6 +396,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -390,6 +406,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -430,6 +447,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -439,6 +457,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -479,6 +498,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -488,6 +508,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -528,6 +549,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -537,6 +559,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -577,6 +600,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -586,6 +610,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -626,6 +651,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -635,6 +661,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -675,6 +702,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -684,6 +712,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -724,6 +753,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -733,6 +763,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -773,6 +804,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -782,6 +814,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -822,6 +855,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -831,6 +865,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -871,6 +906,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -880,6 +916,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -920,6 +957,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -929,6 +967,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -969,6 +1008,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -978,6 +1018,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -1018,6 +1059,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -1027,6 +1069,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -1067,6 +1110,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -1076,6 +1120,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -1116,6 +1161,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -1125,6 +1171,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -1165,6 +1212,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -1174,6 +1222,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -1214,6 +1263,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -1223,6 +1273,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -1263,6 +1314,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -1272,6 +1324,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -1312,6 +1365,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -1321,6 +1375,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -1361,6 +1416,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -1370,6 +1426,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -1410,6 +1467,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: 0,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
@@ -1419,6 +1477,7 @@ app.get("/section-head", (req, res) => {
                     disposed: sectionInfo[0].disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: sectionInfo[0].id,
+                    message: req.flash("message"),
                   });
                 }
               });
@@ -1455,14 +1514,18 @@ app.post("/section-head", async (req, res) => {
     where("DateStamp.year", "==", year)
   );
   let querySnap = await getDocs(q);
-  querySnap.forEach((prevDoc)=>{
+  querySnap.forEach((prevDoc) => {
     prevDocSnap = prevDoc.data();
-  })
+  });
   let docRef = doc(database, disposed.section, disposed.sessionID);
   getDoc(docRef).then((response) => {
     docSnap = response.data();
-    if(docSnap.Received + prevDocSnap.pendency < disposed.disposed){
-      res.send("The disposed count is more than the pendencies. Please check the disposed count. <a href='section-head' >Go Back</a>")
+    if (docSnap.Received + prevDocSnap.pendency < disposed.disposed) {
+      req.flash(
+        "message",
+        "Disposed count is mode than the pendencies. Please enter a valid disposed count!"
+      );
+      res.redirect("/section-head");
       return;
     }
     console.log(docSnap);
@@ -1471,11 +1534,19 @@ app.post("/section-head", async (req, res) => {
         disposed: disposed.disposed,
         pendency: prevDocSnap.pendency + docSnap.Received - disposed.disposed,
       });
-      res.send("Disposed count updated! <a href='/section-head'>Go Back</a>");
-    } else {
-      res.send(
-        "Sorry today's disposed is already recorded! Try again tomorrow. <a href='/section-head'>Go Back</a>"
+      req.flash(
+        "message",
+        "Disposed count submitted"
       );
+      res.redirect("/section-head");
+      return;
+    } else {
+      req.flash(
+        "message",
+        "Today's disposed count already submitted! Try again tomorrow."
+      );
+      res.redirect("/section-head");
+      return;
     }
   });
 });

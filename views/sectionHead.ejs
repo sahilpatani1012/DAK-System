@@ -70,9 +70,13 @@
             </h5>
             <p class="text-left">Date : <%= date %>
             </p>
-            <p>Old Pendencies : <span id="oldPendency"><%= oldPendency %></span>
+            <p>Old Pendencies : <span id="oldPendency">
+                <%= oldPendency %>
+              </span>
             </p>
-            <p>Dak Received : <span id="received"><%= received %></span>
+            <p>Dak Received : <span id="received">
+                <%= received %>
+              </span>
             </p>
             <p>Disposed Today : <%= disposed %>
             </p>
@@ -84,19 +88,25 @@
           <form class="form-control" action="/section-head" method="post">
             <label for="colFormLabelLg" class="col-sm-3 col-form-label col-form-label-lg">Today's Total
               Disposal:</label>
-            <div class="row mt-3">
-              <div class="col-sm-3">
-                <label for="section">Section:</label>
-                <input id="section" name="section" class="form-control form-control-lg" readonly value= <%= section %>  type="text">
-                <label hidden for="sessionID">Session ID:</label>
-                <input hidden class="form-control form-control-lg" name="sessionID" id="sessionID" type="text" readonly
-                  value=<%= sessionID %> >
-                <label for="disposedCount">Disposed today:</label>
-                <input name="disposed" type="number" class="form-control form-control-lg" id="disposedCount"
-                  placeholder="Enter the number">
+            <% if(message.length>0){ %>
+              <div class="alert alert-warning">
+                <%= message %>
               </div>
-            </div>
-            <button type="submit" class="btn btn-outline-success mt-3 mb-3 text-center">Submit</button>
+              <% } %>
+                    <div class="row mt-3">
+                      <div class="col-sm-3">
+                        <label for="section">Section:</label>
+                        <input id="section" name="section" class="form-control form-control-lg" readonly
+                          value=<%=section %> type="text">
+                        <label hidden for="sessionID">Session ID:</label>
+                        <input hidden class="form-control form-control-lg" name="sessionID" id="sessionID" type="text"
+                          readonly value=<%=sessionID %> >
+                        <label for="disposedCount">Disposed today:</label>
+                        <input name="disposed" type="number" class="form-control form-control-lg" id="disposedCount"
+                          placeholder="Enter the number">
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-success mt-3 mb-3 text-center">Submit</button>
         </div>
         </form>
       </div>

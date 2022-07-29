@@ -49,6 +49,11 @@
                 <label for="password" class="form-label">Password: </label>
                 <input  class="form-control form-control-lg" name="password" id="password" type="password" />
               </div>
+              <% if(message.length>0){ %> 
+                <div class="alert alert-warning">
+                  <%= message %> 
+                </div>
+                <% } %> 
               <input  class="btn btn-dark btn-lg"
               style="padding-left: 2.5rem; padding-right: 2.5rem;" type="submit" value="Submit">
             </form>
