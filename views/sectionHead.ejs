@@ -102,7 +102,7 @@
                         <input hidden class="form-control form-control-lg" name="sessionID" id="sessionID" type="text"
                           readonly value=<%=sessionID %> >
                         <label for="disposedCount">Disposed today:</label>
-                        <input name="disposed" type="number" class="form-control form-control-lg" id="disposedCount"
+                        <input min="0" name="disposed" type="number" class="form-control form-control-lg" id="disposedCount"
                           placeholder="Enter the number">
                       </div>
                     </div>

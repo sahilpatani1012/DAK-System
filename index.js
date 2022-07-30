@@ -23,6 +23,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import flash from "connect-flash";
 import session from "express-session";
+import { async } from "@firebase/util";
 
 //Necessary inclusions ---------------------------------------------------
 const __filename = fileURLToPath(import.meta.url);
@@ -191,15 +192,37 @@ app.get("/received-section", (req, res) => {
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
     if (user && email.includes("employee")) {
-      res.render("receivedSection", { date: displayDate });
+      res.render("receivedSection", {
+        date: displayDate,
+        message: req.flash("message"),
+      });
     } else {
       res.redirect("/login");
     }
   });
 });
 
-app.post("/received-section", (req, res) => {
+app.post("/received-section", async (req, res) => {
   let date = new Date();
+
+  let q = query(
+    collection(database, "Establishment"),
+    where("DateStamp.date", "==", date.getDate()),
+    where("DateStamp.month", "==", months[date.getMonth()]),
+    where("DateStamp.year", "==", date.getFullYear())
+  );
+
+  let temp = [];
+  let querySnap = await getDocs(q);
+  querySnap.forEach((docSnap) => {
+    temp.push(docSnap);
+  });
+  if (temp.length !== 0) {
+    req.flash("message", "Today's DAK count already submitted!");
+    res.redirect("/received-section");
+    return;
+  }
+
   const DAKsReceived = [
     parseInt(req.body.section1DakCount),
     parseInt(req.body.section2DakCount),
@@ -238,12 +261,12 @@ app.post("/received-section", (req, res) => {
       pendency: DAKsReceived[i],
     })
       .then(() => {
-        res.send(
-          "DAK counts submitted successfully! <a href='/received-section'>Go Back</a>"
-        );
+        req.flash("message", "DAK count submitted successfully");
+        res.redirect("/received-section");
       })
       .catch((err) => {
-        res.send(err.message);
+        req.flash("message", err.message);
+        res.redirect("/received-section");
       });
   }
 });
@@ -1523,13 +1546,13 @@ app.post("/section-head", async (req, res) => {
   querySnap.forEach((prevDoc) => {
     prevDocSnap = prevDoc.data();
   });
+  let oldPendency;
+  if (prevDocSnap === undefined) oldPendency = 0;
+  else oldPendency === prevDocSnap.pendency;
   let docRef = doc(database, disposed.section, disposed.sessionID);
   getDoc(docRef).then((response) => {
     docSnap = response.data();
-    if (
-      docSnap.Received + prevDocSnap.pendency < disposed.disposed ||
-      disposed.disposed < 0
-    ) {
+    if (docSnap.Received + oldPendency < disposed.disposed) {
       req.flash(
         "message",
         "Disposed count is invalid. Please enter a valid disposed count!"
@@ -1537,11 +1560,10 @@ app.post("/section-head", async (req, res) => {
       res.redirect("/section-head");
       return;
     }
-    console.log(docSnap);
     if (docSnap.disposed === 0) {
       updateDoc(docRef, {
         disposed: disposed.disposed,
-        pendency: prevDocSnap.pendency + docSnap.Received - disposed.disposed,
+        pendency: oldPendency + docSnap.Received - disposed.disposed,
       });
       req.flash("message", "Disposed count submitted");
       res.redirect("/section-head");
@@ -1604,7 +1626,8 @@ app.post("/daily-report", async (req, res) => {
         allSection.push(docFile.data());
       });
     }
-    for (let i = 0; i < allSection.length; i++) {
+    let tempall = [];
+    for (let i = 0; i < sections.length; i++) {
       let efficiency = Math.round(
         (allSection[i].disposed / allSection[i].Received) * 100
       );
@@ -1613,9 +1636,10 @@ app.post("/daily-report", async (req, res) => {
         efficiency: efficiency,
         section: sections[i],
       };
+      tempall.push(allSection[i]);
     }
-    allSection.sort((a, b) => parseInt(b.efficiency) - parseInt(a.efficiency));
-    res.render("DailyReportAll", { allSection: allSection, date: dateString });
+    tempall.sort((a, b) => parseInt(b.efficiency) - parseInt(a.efficiency));
+    res.render("DailyReportAll", { allSection: tempall, date: dateString });
   } else {
     let q = query(
       collection(database, section),

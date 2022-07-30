@@ -1,477 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Received Section</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="Assets/CSS/style.css" />
-  </head>
-  <body>
-    <!--Navbar-->
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
-      <div class="container">
-        <a href="/" class="navbar-brand">Dak Portal</a>
-        <ul class="navbar-nav justify-content-end">
-          <li class="nav-item">
-            <a href="/logout" class="nav-link">
-              <i class="fas fa-user-times"></i> Logout
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
 
-    <!--Header-->
-    <header id="main-header" class="py-2 bg-black text-white">
-      <div class="container">
-        <div class="row">
-          <div class="text-center">
-            <h2>Office Of District Collector</h2>
-            <h1>Government Of Rajasthan</h1>
-            <h3>District Jaipur</h3>
-          </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Received Section</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous" />
+  <link rel="stylesheet" href="Assets/CSS/style.css" />
+</head>
+
+<body>
+  <!--Navbar-->
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
+    <div class="container">
+      <a href="/" class="navbar-brand">Dak Portal</a>
+      <ul class="navbar-nav justify-content-end">
+        <li class="nav-item">
+          <a href="/logout" class="nav-link">
+            <i class="fas fa-user-times"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!--Header-->
+  <header id="main-header" class="py-2 bg-black text-white">
+    <div class="container">
+      <div class="row">
+        <div class="text-center">
+          <h2>Office Of District Collector</h2>
+          <h1>Government Of Rajasthan</h1>
+          <h3>District Jaipur</h3>
         </div>
       </div>
-    </header>
+    </div>
+  </header>
 
-    <!--Daily Dak Monitoring System Header-->
+  <!--Daily Dak Monitoring System Header-->
 
-    <section>
-      <div class="container mt-3">
-        <h2 class="text-center">Daily Dak Monitoring System</h2>
-        <h3 class="text-left">Date : <%= date %> </h3>
-        <h3 class="text-left">User : Received Section Head</h3>
-      </div>
-    </section>
+  <section>
+    <div class="container mt-3">
+      <h2 class="text-center">Daily Dak Monitoring System</h2>
+      <h3 class="text-left">Date : <%= date %>
+      </h3>
+      <h3 class="text-left">User : Received Section Head</h3>
+      <% if(message.length>0){ %>
+        <div class="alert alert-success">
+          <%= message %>
+        </div>
+        <% } %>
+    </div>
+  </section>
 
-    <!--Main Content-->
+  <!--Main Content-->
 
-    <section>
-      <div class="container">
-        <h4 class="mt-3 text-center">Daks Dispatched Today</h4>
-        <form action="/received-section" method="post">
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Establishment  :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section1DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+  <section>
+    <div class="container">
+      <h4 class="mt-3 text-center">Daks Dispatched Today</h4>
+      <form action="/received-section" method="post">
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Establishment :</label>
+          <div class="col-sm-10">
+            <input required name="section1DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Justice :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section2DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Justice :</label>
+          <div class="col-sm-10">
+            <input required name="section2DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Revenue :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section3DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Revenue :</label>
+          <div class="col-sm-10">
+            <input required name="section3DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Assistance(sahayata) :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section4DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Assistance(sahayata) :</label>
+          <div class="col-sm-10">
+            <input required name="section4DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Panchayat :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section5DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Panchayat :</label>
+          <div class="col-sm-10">
+            <input required name="section5DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Development  :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section6DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Development :</label>
+          <div class="col-sm-10">
+            <input required name="section6DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Accounts :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section7DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Accounts :</label>
+          <div class="col-sm-10">
+            <input required name="section7DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Land records :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section8DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Land records :</label>
+          <div class="col-sm-10">
+            <input required name="section8DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Single window :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section9DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Single window :</label>
+          <div class="col-sm-10">
+            <input required name="section9DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Stores :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section10DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Stores :</label>
+          <div class="col-sm-10">
+            <input required name="section10DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Court :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section11DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Court :</label>
+          <div class="col-sm-10">
+            <input required name="section11DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >PDR :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section12DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">PDR :</label>
+          <div class="col-sm-10">
+            <input required name="section12DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >IRA :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section13DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">IRA :</label>
+          <div class="col-sm-10">
+            <input required name="section13DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Vigilance :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section14DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Vigilance :</label>
+          <div class="col-sm-10">
+            <input required name="section14DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >General Administration :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section15DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">General Administration :</label>
+          <div class="col-sm-10">
+            <input required name="section15DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Law :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section16DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Law :</label>
+          <div class="col-sm-10">
+            <input required name="section16DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Records :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section17DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Records :</label>
+          <div class="col-sm-10">
+            <input required name="section17DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Estates :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section18DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Estates :</label>
+          <div class="col-sm-10">
+            <input required name="section18DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >DRA :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section19DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">DRA :</label>
+          <div class="col-sm-10">
+            <input required name="section19DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Elections :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section20DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Elections :</label>
+          <div class="col-sm-10">
+            <input required name="section20DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Letter Dispatch :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section21DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Letter Dispatch :</label>
+          <div class="col-sm-10">
+            <input required name="section21DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >CB section :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section22DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">CB section :</label>
+          <div class="col-sm-10">
+            <input required name="section22DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Public Grievances :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section23DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Public Grievances :</label>
+          <div class="col-sm-10">
+            <input required name="section23DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="row mb-3">
-            <label
-              for="colFormLabelLg"
-              class="col-sm-2 col-form-label col-form-label-lg"
-              >Loans :</label
-            >
-            <div class="col-sm-10">
-              <input
-                name="section24DakCount"
-                type="number"
-                class="form-control form-control-lg"
-                id="colFormLabelLg"
-                placeholder="Enter the number"
-              />
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Loans :</label>
+          <div class="col-sm-10">
+            <input required name="section24DakCount" min="0" type="number" class="form-control form-control-lg" id="colFormLabelLg"
+              placeholder="Enter the number" />
           </div>
-          <div class="mt-3 mb-3 text-center">
-            <button type="submit" class="btn btn-outline-success">
-              Submit
-            </button>
-            <button type="reset" class="btn btn-outline-danger">Reset</button>
-          </div>
-        </form>
-      </div>
-    </section>
+        </div>
+        <div class="mt-3 mb-3 text-center">
+          <button type="submit" class="btn btn-outline-success">
+            Submit
+          </button>
+          <button type="reset" class="btn btn-outline-danger">Reset</button>
+        </div>
+      </form>
+    </div>
+  </section>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
-      integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
-      integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+    integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+    integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+    crossorigin="anonymous"></script>
+</body>
+
 </html>
