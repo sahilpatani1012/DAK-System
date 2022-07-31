@@ -273,7 +273,7 @@ app.post("/received-section", async (req, res) => {
 
 //SECTION HEAD SECTION
 
-app.get("/section-head", (req, res) => {
+app.get("/section-head", async (req, res) => {
   let dateObj = new Date();
   let date = dateObj.getDate();
   let month = months[dateObj.getMonth()];
@@ -1756,7 +1756,7 @@ app.get("/logout", (req, res) => {
     });
   return;
 });
-
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+let port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log("Server is running on port "+ port);
 });
