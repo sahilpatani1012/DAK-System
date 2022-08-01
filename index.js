@@ -62,6 +62,7 @@ const months = [
   "Dec",
 ];
 
+//Section names array --------------------------------------------------
 const sections = [
   "Establishment",
   "Justice",
@@ -116,6 +117,7 @@ const CB_Section = collection(database, "CB Section");
 const Public_Grievances = collection(database, "Public Grievances");
 const Loans = collection(database, "Loans");
 
+//Section Database reference array ------------------------------------------
 const sectionDatabases = [
   Establishment,
   Justice,
