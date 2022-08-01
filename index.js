@@ -164,10 +164,10 @@ app.post("/login", (req, res) => {
       const user = userCredential.user;
       if (user.email.includes("collector")) {
         res.redirect("/report");
-      } else if (user.email.includes("sectionhead")) {
-        res.redirect("/section-head");
-      } else {
+      } else if (user.email.includes("received")) {
         res.redirect("/received-section");
+      } else {
+        res.redirect("/section-head");
       }
     })
     .catch((error) => {
@@ -191,7 +191,7 @@ app.get("/received-section", (req, res) => {
   }
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
-    if (user && email.includes("employee")) {
+    if (user && email.includes("received")) {
       res.render("receivedSection", {
         date: displayDate,
         message: req.flash("message"),
@@ -1758,5 +1758,5 @@ app.get("/logout", (req, res) => {
 });
 let port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log("Server is running on port "+ port);
+  console.log("Server is running on port " + port);
 });
