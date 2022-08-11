@@ -302,6 +302,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[0],
                 where("DateStamp.date", "==", date - 1),
@@ -317,20 +329,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[0],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[0],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -353,6 +365,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[1],
                 where("DateStamp.date", "==", date - 1),
@@ -368,20 +392,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[1],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[1],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                     message: req.flash("message"),
                   });
@@ -405,7 +429,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
-              console.log(sectionInfo);
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[2],
                 where("DateStamp.date", "==", date - 1),
@@ -421,20 +456,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[2],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[2],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -457,6 +492,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[3],
                 where("DateStamp.date", "==", date - 1),
@@ -472,20 +519,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[3],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[3],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -508,6 +555,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[4],
                 where("DateStamp.date", "==", date - 1),
@@ -523,20 +582,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[4],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[4],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -559,6 +618,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[5],
                 where("DateStamp.date", "==", date - 1),
@@ -574,20 +645,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[5],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[5],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -610,6 +681,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[6],
                 where("DateStamp.date", "==", date - 1),
@@ -625,20 +708,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[6],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[6],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -661,6 +744,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[7],
                 where("DateStamp.date", "==", date - 1),
@@ -676,20 +771,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[7],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[7],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -712,6 +807,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[8],
                 where("DateStamp.date", "==", date - 1),
@@ -727,20 +834,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[8],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[8],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -763,6 +870,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[9],
                 where("DateStamp.date", "==", date - 1),
@@ -778,20 +897,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[9],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[9],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -814,6 +933,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[10],
                 where("DateStamp.date", "==", date - 1),
@@ -829,20 +960,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[10],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[10],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -865,6 +996,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[11],
                 where("DateStamp.date", "==", date - 1),
@@ -880,20 +1023,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[11],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[11],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -916,6 +1059,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[12],
                 where("DateStamp.date", "==", date - 1),
@@ -931,20 +1086,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[12],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[12],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -967,6 +1122,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[13],
                 where("DateStamp.date", "==", date - 1),
@@ -982,20 +1149,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[13],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[13],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -1018,6 +1185,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[14],
                 where("DateStamp.date", "==", date - 1),
@@ -1033,20 +1212,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[14],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[14],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -1069,6 +1248,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[15],
                 where("DateStamp.date", "==", date - 1),
@@ -1084,20 +1275,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[15],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[15],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -1120,6 +1311,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[16],
                 where("DateStamp.date", "==", date - 1),
@@ -1135,20 +1338,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[16],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+            eceived,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[16],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+            eceived,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -1171,6 +1374,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[17],
                 where("DateStamp.date", "==", date - 1),
@@ -1186,20 +1401,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[17],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[17],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -1222,6 +1437,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[18],
                 where("DateStamp.date", "==", date - 1),
@@ -1237,20 +1464,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[18],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[18],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -1273,6 +1500,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[19],
                 where("DateStamp.date", "==", date - 1),
@@ -1288,20 +1527,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[19],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[19],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -1324,6 +1563,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[20],
                 where("DateStamp.date", "==", date - 1),
@@ -1339,20 +1590,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[20],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[20],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -1375,6 +1626,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[21],
                 where("DateStamp.date", "==", date - 1),
@@ -1390,20 +1653,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[21],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[21],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -1426,6 +1689,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[22],
                 where("DateStamp.date", "==", date - 1),
@@ -1441,20 +1716,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[22],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[22],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }
@@ -1477,6 +1752,18 @@ app.get("/section-head", (req, res) => {
               sectionInfo = response.docs.map((item) => {
                 return { ...item.data(), id: item.id };
               });
+              let received;
+              let disposed;
+              let id;
+              if (sectionInfo[0] === undefined) {
+                received = 0;
+                disposed = 0;
+                id = "null";
+              } else {
+                received = sectionInfo[0].Received;
+                disposed = sectionInfo[0].disposed;
+                id = sectionInfo[0].id;
+              }
               q = query(
                 sectionDatabases[23],
                 where("DateStamp.date", "==", date - 1),
@@ -1492,20 +1779,20 @@ app.get("/section-head", (req, res) => {
                   res.render("sectionHead", {
                     section: sections[23],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: 0,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 } else {
                   res.render("sectionHead", {
                     section: sections[23],
                     date: dateString,
-                    received: sectionInfo[0].Received,
-                    disposed: sectionInfo[0].disposed,
+                    received: received,
+                    disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
-                    sessionID: sectionInfo[0].id,
+                    sessionID: id,
                     message: req.flash("message"),
                   });
                 }

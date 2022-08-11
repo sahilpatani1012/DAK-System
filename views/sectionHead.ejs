@@ -93,20 +93,25 @@
                 <%= message %>
               </div>
               <% } %>
-                    <div class="row mt-3">
-                      <div class="col-sm-3">
-                        <label for="section">Section:</label>
-                        <input id="section" name="section" class="form-control form-control-lg" readonly
-                          value="<%=section %>" type="text">
-                        <label hidden for="sessionID">Session ID:</label>
-                        <input hidden class="form-control form-control-lg" name="sessionID" id="sessionID" type="text"
-                          readonly value=<%=sessionID %> >
-                        <label for="disposedCount">Disposed today:</label>
-                        <input min="0" name="disposed" type="number" class="form-control form-control-lg" id="disposedCount"
-                          placeholder="Enter the number">
-                      </div>
-                    </div>
-                    <button type="submit" class="btn btn-outline-success mt-3 mb-3 text-center">Submit</button>
+                <div class="row mt-3">
+                  <div class="col-sm-3">
+                    <label for="section">Section:</label>
+                    <input id="section" name="section" class="form-control form-control-lg" readonly
+                      value="<%=section %>" type="text">
+                    <label hidden for="sessionID">Session ID:</label>
+                    <input hidden class="form-control form-control-lg" name="sessionID" id="sessionID" type="text"
+                      readonly value=<%=sessionID %> >
+                    <label for="disposedCount">Disposed today:</label>
+                    <% if(received===0){ %>
+                      <input readonly min="0" name="disposed" type="number" class="form-control form-control-lg"
+                        id="disposedCount" placeholder="Enter the number">
+                      <% } else { %>
+                        <input min="0" name="disposed" type="number" class="form-control form-control-lg"
+                          id="disposedCount" placeholder="Enter the number">
+                        <% } %>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-outline-success mt-3 mb-3 text-center">Submit</button>
         </div>
         </form>
       </div>
