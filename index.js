@@ -62,6 +62,7 @@ const months = [
   "Dec",
 ];
 
+//Section names array --------------------------------------------------
 const sections = [
   "Establishment",
   "Justice",
@@ -116,6 +117,7 @@ const CB_Section = collection(database, "CB Section");
 const Public_Grievances = collection(database, "Public Grievances");
 const Loans = collection(database, "Loans");
 
+//Section Database reference array ------------------------------------------
 const sectionDatabases = [
   Establishment,
   Justice,
@@ -164,10 +166,10 @@ app.post("/login", (req, res) => {
       const user = userCredential.user;
       if (user.email.includes("collector")) {
         res.redirect("/report");
-      } else if (user.email.includes("sectionhead")) {
-        res.redirect("/section-head");
-      } else {
+      } else if (user.email.includes("received")) {
         res.redirect("/received-section");
+      } else {
+        res.redirect("/section-head");
       }
     })
     .catch((error) => {
@@ -191,7 +193,7 @@ app.get("/received-section", (req, res) => {
   }
   const email = currentUser.email;
   onAuthStateChanged(auth, (user) => {
-    if (user && email.includes("employee")) {
+    if (user && email.includes("received")) {
       res.render("receivedSection", {
         date: displayDate,
         message: req.flash("message"),
@@ -273,7 +275,7 @@ app.post("/received-section", async (req, res) => {
 
 //SECTION HEAD SECTION
 
-app.get("/section-head", (req, res) => {
+app.get("/section-head", async (req, res) => {
   let dateObj = new Date();
   let date = dateObj.getDate();
   let month = months[dateObj.getMonth()];
@@ -2043,7 +2045,7 @@ app.get("/logout", (req, res) => {
     });
   return;
 });
-
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+let port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log("Server is running on port " + port);
 });
