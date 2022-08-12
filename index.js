@@ -67,7 +67,7 @@ const sections = [
   "Establishment",
   "Justice",
   "Revenue",
-  "Assistance",
+  "Relief",
   "Panchayat",
   "Development",
   "Accounts",
@@ -95,7 +95,7 @@ const sections = [
 const Establishment = collection(database, "Establishment");
 const Justice = collection(database, "Justice");
 const Revenue = collection(database, "Revenue");
-const Assistance = collection(database, "Assistance");
+const Relief = collection(database, "Relief");
 const Panchayat = collection(database, "Panchayat");
 const Development = collection(database, "Development");
 const Accounts = collection(database, "Accounts");
@@ -122,7 +122,7 @@ const sectionDatabases = [
   Establishment,
   Justice,
   Revenue,
-  Assistance,
+  Relief,
   Panchayat,
   Development,
   Accounts,
@@ -481,7 +481,7 @@ app.get("/section-head", async (req, res) => {
               res.send(err.message);
             });
           break;
-        case "assistance.sectionhead@gmail.com":
+        case "relief.sectionhead@gmail.com":
           q = query(
             sectionDatabases[3],
             where("DateStamp.date", "==", date),
