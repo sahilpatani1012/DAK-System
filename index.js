@@ -409,7 +409,6 @@ app.get("/section-head", async (req, res) => {
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: id,
                     message: req.flash("message"),
-                    message: req.flash("message"),
                   });
                 }
               });
@@ -1340,7 +1339,7 @@ app.get("/section-head", async (req, res) => {
                   res.render("sectionHead", {
                     section: sections[16],
                     date: dateString,
-            eceived,
+                    received: received,
                     disposed: disposed,
                     oldPendency: 0,
                     sessionID: id,
@@ -1350,7 +1349,7 @@ app.get("/section-head", async (req, res) => {
                   res.render("sectionHead", {
                     section: sections[16],
                     date: dateString,
-            eceived,
+                    received: received,
                     disposed: disposed,
                     oldPendency: prevSectionInfo[0].pendency,
                     sessionID: id,
@@ -1837,7 +1836,7 @@ app.post("/section-head", async (req, res) => {
   });
   let oldPendency;
   if (prevDocSnap === undefined) oldPendency = 0;
-  else oldPendency === prevDocSnap.pendency;
+  else oldPendency = prevDocSnap.pendency;
   let docRef = doc(database, disposed.section, disposed.sessionID);
   getDoc(docRef).then((response) => {
     docSnap = response.data();
