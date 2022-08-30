@@ -1,4 +1,5 @@
 //Imports --------------------------------------------------------
+import 'dotenv/config'
 import express, { response } from "express";
 const app = express();
 import { application, database } from "./firebaseConfig.js";
@@ -147,7 +148,7 @@ const sectionDatabases = [
 
 //Routes --------------------------------------------------------
 app.get("/", (req, res) => {
-  res.render("index");
+  res.redirect("/login");
   return;
 });
 
