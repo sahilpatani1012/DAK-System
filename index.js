@@ -263,15 +263,8 @@ app.post("/received-section", async (req, res) => {
       disposed: 0,
       pendency: DAKsReceived[i],
     })
-      .then(() => {
-        req.flash("message", "DAK count submitted successfully");
-        res.redirect("/received-section");
-      })
-      .catch((err) => {
-        req.flash("message", err.message);
-        res.redirect("/received-section");
-      });
   }
+  res.redirect("/received-section");
 });
 
 //SECTION HEAD SECTION
