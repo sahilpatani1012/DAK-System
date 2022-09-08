@@ -2038,7 +2038,7 @@ app.get("/logout", (req, res) => {
     });
   return;
 });
-let port = process.env.PORT || 3000;
+let port = 80;
 app.listen(port, () => {
   console.log("Server is running on port " + port);
 });
